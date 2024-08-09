@@ -59,6 +59,13 @@
                         <td class="d-flex align-items-center justify-content-center">
                             <ul class="botonp list-unstyled m-0">
                                 <li class="icon-content">
+                                    <a aria-label="Agregar credenciales" data-social="limpiar" (click)="openModalLogin(o.idCliente)">
+                                        <div class="filled"></div>
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                    <div class="tooltip">Credenciales</div>
+                                </li>
+                                <li class="icon-content">
                                     <a aria-label="Editar" data-social="editar" (click)="openModal('edit', o)">
                                         <div class="filled"></div>
                                         <i class="fas fa-pencil-alt fa-lg" aria-hidden="true"></i>
@@ -337,6 +344,43 @@
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
                             <button type="button" class="btn btn-success" (click)="guardar()">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de usuario y contraseña -->
+<div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="modalLogin" aria-hidden="true" (hidden.bs.modal)="onModalCloseLogin()">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h1 class="modal-title fs-5 w-100 text-center" id="modalLogin">{{ modalTitle }}</h1>
+                <!-- Pendiente quitar este botón de cierre -->
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-lg p-4">
+                    <form [formGroup]="datosLoginForm" novalidate (ngSubmit)="guardarLogin()">
+                        <div class="inputs-container mt-4">
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="usuario" formControlName="usuario" placeholder="Usuario*">
+                                <label for="usuario">Usuario*</label>
+                            </div>
+                            <div class="floating-label password-input-wrapper">
+                                <input [type]="passwordVisible ? 'text' : 'password'" required formControlName="contrasenia" class="inputM">
+                                <label>Contraseña</label>
+                                <span class="password-icon" (click)="togglePasswordVisibility()">
+                                    <i *ngIf="!passwordVisible" class="fas fa-eye"></i>
+                                    <i *ngIf="passwordVisible" class="fas fa-eye-slash"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-success" (click)="guardarLogin()">Guardar</button>
                         </div>
                     </form>
                 </div>

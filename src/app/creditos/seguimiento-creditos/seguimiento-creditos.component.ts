@@ -6,6 +6,8 @@ import { ICredito } from '../../interfaces/credito';
 import { CreditosService } from '../../services/creditos.service';
 import { ICliente } from '../../interfaces/cliente';
 import { ClientesService } from '../../services/clientes.service';
+import { LoginService } from '../../services/login.service';
+import { IUsuario } from '../../interfaces/usuario';
 
 declare let Swal: any;
 
@@ -19,6 +21,7 @@ declare let Swal: any;
 export class SeguimientoCreditosComponent implements OnInit {
     creditos: ICredito[] = [];
     clientes: ICliente[] = [];
+    usuarios: IUsuario[] = [];
     creditoForm: FormGroup;
     personaForm: FormGroup;
     personaMoralForm: FormGroup;
@@ -33,13 +36,17 @@ export class SeguimientoCreditosComponent implements OnInit {
     selectedEntity: any;
     fechaFirma: string = '';
     fechaActivacion: string = '';
+    idPromotorSeleccionado: number | null = null;
+    mostrarPromotor: boolean = false;
+    nombrePromotor: string = '';
 
     constructor(
         private elementRef: ElementRef,
         private fb: FormBuilder,
         private toastr: ToastrService,
         private creditosService: CreditosService,
-        private clientesService: ClientesService
+        private clientesService: ClientesService,
+        private loginService: LoginService
     ) { 
         this.creditoForm = this.fb.group({
             idCredito: [0],
@@ -341,6 +348,11 @@ export class SeguimientoCreditosComponent implements OnInit {
         this.datosPersonaMoral = [];
         this.fechaFirma = '';
         this.fechaActivacion = '';
+        this.idPromotorSeleccionado = null;
+        this.mostrarPromotor = false;
+        this.usuarios = [];
+        this.nombrePromotor = '';
+        this.idPromotorSeleccionado = null;
     }
 
     onRegimenFiscalChange(event: any): void {
@@ -411,6 +423,16 @@ export class SeguimientoCreditosComponent implements OnInit {
 
     openModalDetalles(credito: ICredito) {
         this.creditoSeleccionado = credito;
+        if(this.creditoSeleccionado.idPromotor == 0){
+            this.mostrarPromotor = false;
+        }else{
+            this.mostrarPromotor = true;
+        }
+
+        this.loginService.getUsuarios().subscribe((data) => {
+            this.usuarios = data.filter(user => user.idUsuario === this.creditoSeleccionado.idPromotor);
+            this.nombrePromotor = this.usuarios[0].nombre + ' ' + this.usuarios[0].apellidoPaterno + ' ' + this.usuarios[0].apellidoMaterno;
+        });
 
         const modalElement = this.elementRef.nativeElement.querySelector('#modalDetalles') as HTMLElement;
         if (modalElement) {
@@ -469,7 +491,7 @@ export class SeguimientoCreditosComponent implements OnInit {
     }
 
     async eliminarAvalPregunta(aval: any) {
-        if(this.creditoSeleccionado.estatus === 3) {
+        if(this.creditoSeleccionado.estatus != 1) {
             this.toastr.error('No se pueden borrar los datos de un crédito activo');
             return;
         }
@@ -564,7 +586,7 @@ export class SeguimientoCreditosComponent implements OnInit {
     }
 
     async eliminarObligadoPregunta(obligado: any) {
-        if(this.creditoSeleccionado.estatus === 3) {
+        if(this.creditoSeleccionado.estatus != 1) {
             this.toastr.error('No se pueden borrar los datos de un crédito activo');
             return;
         }
@@ -674,7 +696,7 @@ export class SeguimientoCreditosComponent implements OnInit {
             } else if (this.selectedEntity.idPersonaMoralNavigation) {
                 this.personaMoralForm.patchValue(this.selectedEntity.idPersonaMoralNavigation);
                 this.obligadoSeleccionado = this.selectedEntity;
-    
+
                 const modalElement = this.elementRef.nativeElement.querySelector('#editarMorales') as HTMLElement;
                 if (modalElement) {
                     const modal = new (window as any).bootstrap.Modal(modalElement, {
@@ -690,8 +712,8 @@ export class SeguimientoCreditosComponent implements OnInit {
     }
 
     guardarEdicion(){
-        if(this.creditoSeleccionado.estatus === 3) {
-            this.toastr.error('No se pueden editar los datos de un crédito activo');
+        if(this.creditoSeleccionado.estatus != 1) {
+            this.toastr.error('No se pueden editar los datos de este credito');
             return;
         }
         if(this.avalSeleccionado){
@@ -761,9 +783,14 @@ export class SeguimientoCreditosComponent implements OnInit {
     }
 
     guardarFirma(){
-        console.log(this.fechaFirma);
         if(!this.fechaFirma){
             this.toastr.warning('Por favor, selecciona una fecha.');
+            return;
+        }
+
+        if(this.creditoSeleccionado.idPromotor == 0){
+            this.toastr.warning('Por favor, selecciona un promotor primero.');
+            return;
         }
 
         this.creditoSeleccionado.fechaFirma = this.fechaFirma;
@@ -813,6 +840,84 @@ export class SeguimientoCreditosComponent implements OnInit {
             }
         });
     }
+
+    openModalPromotor(credito: ICredito) {
+        this.creditoSeleccionado = credito;
+        const selectElement = this.elementRef.nativeElement.querySelector('#promotorSelect') as HTMLSelectElement;
+        if (selectElement) {
+            selectElement.value = ""; 
+        }
+        this.ngAfterViewChecked();
+
+        this.loginService.getUsuarios().subscribe((data) => {
+            this.usuarios = data.filter(user => user.idRol === 2);
+        });
     
-    
+        const modalElement = this.elementRef.nativeElement.querySelector('#promotorModal') as HTMLElement;
+        if (modalElement) {
+            const modal = new (window as any).bootstrap.Modal(modalElement, {
+                backdrop: 'static',
+                keyboard: false
+            });
+            modal.show();
+        } else {
+            console.error('Modal element not found');
+        }
+    }
+
+    onModalClosePromotor() {
+        this.idPromotorSeleccionado = null;
+        this.ngAfterViewChecked();
+
+        const modalElement = this.elementRef.nativeElement.querySelector('#promotorModal');
+        if (modalElement) {
+            const modalInstance = (window as any).bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+    }
+
+    ngAfterViewChecked() {
+        if (this.idPromotorSeleccionado === null) {
+            const selectElement = this.elementRef.nativeElement.querySelector('#promotorSelect') as HTMLSelectElement;
+            if (selectElement) {
+                selectElement.value = "";
+            }
+        }
+    }
+
+    async asignarPromotor() {
+        if (!this.idPromotorSeleccionado) {
+            this.toastr.warning('Por favor, selecciona un promotor.');
+            return;
+        }
+        console.log(this.idPromotorSeleccionado);
+
+        const result = await Swal.fire({
+            title: '¿Asignar promotor?',
+            text: "¿Estás seguro de asignar a este promotor? No podra cambiarlo posteriormente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, asignar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            this.creditoSeleccionado.idPromotor = this.idPromotorSeleccionado;
+
+            this.creditosService.actualizarCredito(this.creditoSeleccionado).subscribe({
+                next: (response) => {
+                    this.toastr.success('Promotor asignado correctamente.');
+                    this.onModalClosePromotor();
+                    this.obtenerCreditosYClientes();
+                },
+                error: () => {
+                    this.toastr.error('Error al asignar el promotor.');
+                }
+            });
+        }
+    }
 }

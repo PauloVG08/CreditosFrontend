@@ -54,6 +54,22 @@ export class LoginService {
         }
     }
 
+    getUsuarios(): Observable<IUsuario[]> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return throwError(() => new Error('No token found'));
+        }
+
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.get<IUsuario[]>(`${this.apiUrl}`, { headers })
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error: any): Observable<never> {
         return throwError(() => new Error(error.message || 'Server Error'));
     }

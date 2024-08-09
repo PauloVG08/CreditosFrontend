@@ -3,12 +3,13 @@ import { ClientesService } from '../../services/clientes.service';
 import { ICliente } from '../../interfaces/cliente';
 import { IDatosClienteFisica } from '../../interfaces/datosClienteFisica';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators, ValueChangeEvent } from '@angular/forms';
 import { IPersonaMoral } from '../../interfaces/personaMoral';
 import { IDatosClienteMoral } from '../../interfaces/datosClienteMoral';
 import { IPersona } from '../../interfaces/persona';
 import { ICatalogoDocumento } from '../../interfaces/catalogoDocumento';
 import { ToastrService } from 'ngx-toastr';
+import { IUsuarioCliente } from '../../interfaces/usuarioCliente';
 
 declare let Swal: any;
 
@@ -26,6 +27,10 @@ export class ClientesComponent implements OnInit {
     mostrarFisica: boolean = false;
     @ViewChild('modalElement', { static: false }) modalElement!: ElementRef;
     filteredClientes: any[] = [];
+    datosLoginForm: FormGroup;
+    idClienteSeleccionado: number = 0;
+    usuarioCliente: IUsuarioCliente = {} as IUsuarioCliente;
+    passwordVisible: boolean = false;
 
     constructor(
         private clientesService: ClientesService,
@@ -40,6 +45,13 @@ export class ClientesComponent implements OnInit {
             estatus: [1, Validators.required],
             datosClienteFisicas: this.fb.array([this.createDatosClienteFisicaGroup({} as IDatosClienteFisica)]),
             datosClienteMorals: this.fb.array([this.createDatosClienteMoralGroup({} as IDatosClienteMoral)]),
+        });
+        this.datosLoginForm = this.fb.group({
+            idUsuarioCliente: [0],
+            idCliente: [0],
+            usuario: ['', Validators.required],
+            contrasenia: ['', Validators.required],
+            estatus: [1],
         });
     }
 
@@ -412,5 +424,93 @@ export class ClientesComponent implements OnInit {
             tipo: [catalogoDocumento.tipo],
             estatus: [catalogoDocumento.estatus]
         });
+    }
+
+    async guardarLogin() {
+        this.datosLoginForm.patchValue({ estatus: 1 });
+
+        if (!this.datosLoginForm.valid) {
+            this.toastr.warning('Por favor, complete todos los campos obligatorios.', 'Formulario inválido');
+            return;
+        }
+
+        if(this.datosLoginForm.get('idUsuarioCliente')?.value == 0){
+            // Guardar nuevo usuario
+            this.clientesService.addUsuarioCliente(this.datosLoginForm.value).subscribe({
+                next: () => {
+                    this.obtenerUsuarioCliente();
+                    this.toastr.success('Usuario guardado correctamente', 'Éxito');
+                    this.onModalCloseLogin();
+                },
+                error: (error) => this.toastr.error('Ocurrio un error al guardar el usuario', 'Error')
+            })
+        }else {
+            // Actualizar usuario
+            this.clientesService.updateUsuarioCliente(this.datosLoginForm.value).subscribe({
+                next: () => {
+                    this.obtenerUsuarioCliente();
+                    this.toastr.success('Usuario actualizado correctamente', 'Éxito');
+                    this.onModalCloseLogin();
+                },
+                error: (error) => this.toastr.error('Ocurrio un error al actualizar el usuario', 'Error')
+            })
+        }
+    }
+
+    obtenerUsuarioCliente(): Promise<void> {
+        return new Promise((resolve) => {
+            this.clientesService.getUsuarioCliente(this.idClienteSeleccionado).subscribe({
+                next: (data: IUsuarioCliente | null) => {
+                    if (data) {
+                        this.usuarioCliente = data;
+                    } else {
+                        this.usuarioCliente = {
+                            idUsuarioCliente: 0,
+                            idCliente: this.idClienteSeleccionado,
+                            usuario: '',
+                            contrasenia: '',
+                            estatus: 1
+                        };
+                    }
+                    resolve();
+                }
+            });
+        });
+    }
+    
+    async openModalLogin(idCliente: number) {
+        this.idClienteSeleccionado = idCliente;
+        await this.obtenerUsuarioCliente();
+
+        this.datosLoginForm.patchValue({
+            idUsuarioCliente: this.usuarioCliente.idUsuarioCliente,
+            idCliente: this.usuarioCliente.idCliente,
+            usuario: this.usuarioCliente.usuario,
+            contrasenia: this.usuarioCliente.contrasenia,
+            estatus: this.usuarioCliente.estatus
+        });
+    
+        const modal = new (window as any).bootstrap.Modal(this.elementRef.nativeElement.querySelector('#modalLogin') as HTMLElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+        modal.show();
+    }
+
+    onModalCloseLogin(){
+        this.datosLoginForm.reset();
+        this.idClienteSeleccionado = 0;
+
+        const modalElement = this.elementRef.nativeElement.querySelector('#modalLogin');
+        if (modalElement) {
+            const modalInstance = (window as any).bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        }
+    }
+
+    togglePasswordVisibility() {
+        this.passwordVisible = !this.passwordVisible;
     }
 }

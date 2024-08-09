@@ -5,3 +5,18 @@
 .is-invalid:focus {
     border-color: darkred;
 }
+
+.password-icon {
+    position: absolute;
+    top: 35%;
+    right: 10%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+    font-size: 1.5rem;
+    color: #023E73;
+}
+
+input[type="password"] {
+    padding-right: 35px;
+}

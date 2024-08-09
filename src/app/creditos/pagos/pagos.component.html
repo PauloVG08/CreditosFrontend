@@ -101,20 +101,16 @@
             <tr>
               <th class="text-center">Saldo Insoluto</th>
               <th class="text-center">Capital</th>
-              <th class="text-center">Interés</th>
-              <th class="text-center">IVA</th>
-              <th class="text-center">Interés + IVA</th>
-              <th class="text-center">Pago Total</th>
+              <th class="text-center">Interés Total</th>
+              <th class="text-center">Moratorio</th>
             </tr>
           </thead>
           <tbody>
             <tr class="text-center">
               <td>{{ amortizacion.saldoInsoluto | currency }}</td>
               <td>{{ amortizacion.capital | currency }}</td>
-              <td>{{ amortizacion.interesOrdinario | currency }}</td>
-              <td>{{ amortizacion.iva | currency }}</td>
               <td>{{ amortizacion.interesMasIva | currency }}</td>
-              <td>{{ amortizacion.pagoFijo | currency }}</td>
+              <td>{{ amortizacion.interesMoratorio | currency }}</td>
             </tr>
           </tbody>
         </table>

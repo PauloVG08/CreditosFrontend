@@ -32,14 +32,21 @@
                         <td>{{o.numPagos}}</td>
                         <td class="d-flex align-items-center justify-content-center">
                             <ul class="botonp list-unstyled m-0">
-                                <li *ngIf="o.estatus != 3" class="icon-content">
+                                <li *ngIf="o.estatus == 1 && o.idPromotor != 0" class="icon-content">
+                                    <a aria-label="Asignar Promotor" data-social="agregar" (click)="openModalPromotor(o)">
+                                        <div class="filled"></div>
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                    <div class="tooltip">Asignar promotor</div>
+                                </li>
+                                <li *ngIf="o.estatus == 1" class="icon-content">
                                     <a aria-label="Asignar Avales" data-social="agregar" (click)="openModalAval(o)">
                                         <div class="filled"></div>
                                         <i class="fas fa-handshake"></i>
                                     </a>
                                     <div class="tooltip">Avales</div>
                                 </li>
-                                <li *ngIf="o.estatus != 3" class="icon-content">
+                                <li *ngIf="o.estatus == 1" class="icon-content">
                                     <a aria-label="Asignar Obligados" data-social="limpiar" (click)="openModalObligados(o)">
                                         <div class="filled"></div>
                                         <i class="fas fa-users"></i>
@@ -586,6 +593,12 @@
             <div class="modal-body">
                 <div class="card shadow-lg p-4">
                     <div class="card-body">
+                        <div *ngIf="mostrarPromotor">
+                            <h3>Tu promotor es: {{ nombrePromotor }}</h3>
+                        </div>
+                        <div *ngIf="!mostrarPromotor">
+                            <h3>Aún no has asignado un promotor</h3>
+                        </div>
                         <div class="mt-4" *ngIf="creditoSeleccionado.avals && creditoSeleccionado.avals.length > 0">
                             <h3>Tabla de avales</h3>
                             <table class="table table-striped mt-2">
@@ -939,3 +952,36 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de promotor -->
+<div class="modal fade" id="promotorModal" tabindex="-1" aria-labelledby="promotorModal" aria-hidden="true" (hidden.bs.modal)="onModalClosePromotor()">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h1 class="modal-title fs-5 w-100 text-center" id="promotorModal">Asignar Promotor</h1>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-lg p-4">
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50 floating-label">
+                            <select class="inputM" id="promotorSelect" [(ngModel)]="idPromotorSeleccionado">
+                                <!-- <option value="" disabled>Seleccionar Promotor</option> -->
+                                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">
+                                    {{ usuario.nombre }} {{ usuario.apellidoPaterno }} {{ usuario.apellidoMaterno }}
+                                </option>
+                            </select>
+                            <label for="promotorSelect">Seleccionar Promotor</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" (click)="asignarPromotor()">Asignar promotor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
