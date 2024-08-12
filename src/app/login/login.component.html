@@ -34,7 +34,7 @@
                     <button type="button" class="login-button" (click)="login()" [disabled]="loginService.isLoading">Ingresar</button>
                 </div>
             </form>
-            <div *ngIf="loginService.isLoading" class="loader">Cargando...</div>
+            <div *ngIf="loginService.isLoading" class="loader"></div>
         </div>
     </div>
 </div>

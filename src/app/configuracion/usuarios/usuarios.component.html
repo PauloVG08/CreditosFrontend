@@ -1,1 +1,152 @@
-<p>usuarios works!</p>
+<h3 class="titulo">Usuarios</h3>
+<div class="col-12 card shadow mb-4 p-3">
+    <fieldset class="d-flex align-items-center justify-content-between">
+        <div class="alert alert-warning m-0" role="alert">
+            En este modulo tendra la capacidad de agregar, modificar y eliminar los diferentes usuarios.
+        </div>
+        <ul class="botonp m-0 d-flex">
+            <li class="icon-content">
+                <a aria-label="Agregar" data-social="agregar" (click)="openModal('add')">
+                    <div class="filled"></div>
+                    <i class="fa fa-plus fa-lg"></i>
+                </a>
+                <div class="tooltip">Agregar</div>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+
+<div class="card shadow mb-4 p-3" id="spacesTable">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold"><i class="fa fa-user"></i>&nbsp;Listado de usuarios</h6>
+    </div>
+    <fieldset>
+        <div class="no-padding table-responsive" style="margin-top: 20px; font-size: 13px;">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th class="headerTable-top-left">id</th>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th class="headerTable-top-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuarios" class="text-center">
+                        <td>
+                            {{ usuario.idUsuario }}
+                        </td>
+                        <td>
+                            {{ usuario.nombre }}
+                        </td>
+                        <td>
+                            {{ usuario.rol }}
+                        </td>
+                        <td class="d-flex align-items-center justify-content-center">
+                            <ul class="botonp list-unstyled m-0">
+                                <li class="icon-content">
+                                    <a aria-label="editar" data-social="editar" (click)="openModal('edit', usuario)">
+                                        <div class="filled"></div>
+                                        <i class="fa fa-pencil-alt fa-lg"></i>
+                                    </a>
+                                    <div class="tooltip">Editar</div>
+                                </li>
+                                <li class="icon-content">
+                                    <a aria-label="eliminar" data-social="eliminar" (click)="eliminarUsuario(usuario)">
+                                        <div class="filled"></div>
+                                        <i class="fa fa-trash fa-lg"></i>
+                                    </a>
+                                    <div class="tooltip">Eliminar</div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>
+
+<!-- Modal de usuario y contraseña -->
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuario" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h1 class="modal-title fs-5 w-100 text-center" id="modalLogin">{{ modalTitle }}</h1>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-lg p-4">
+                    <form [formGroup]="usuariosForm" novalidate>
+                        <div class="inputs-container mt-4">
+
+                            
+
+                            <!-- Campo Nombre -->
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="nombre" formControlName="nombre" placeholder="Nombre*" required>
+                                <label for="nombre">Nombre*</label>
+                            </div>
+
+                            <!-- Campo Apellido Paterno -->
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="apellidoPaterno" formControlName="apellidoPaterno" placeholder="A. Paterno*" required>
+                                <label for="apellidoPaterno">A. Paterno*</label>
+                            </div>
+
+                            <!-- Campo Apellido Materno -->
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="apellidoMaterno" formControlName="apellidoMaterno" placeholder="A. Materno*" required>
+                                <label for="apellidoMaterno">A. Materno*</label>
+                            </div>
+
+                        </div>
+                        <div class="inputs-container mt-4">
+
+                                <div class="floating-label">
+                                    <select class="inputM" id="rol" formControlName="idRol" placeholder="Rol*" required>
+                                        <option *ngFor="let rol of roles" [value]="rol.idRol">{{ rol.nombreRol }}</option>
+                                    </select>
+                                    <label for="rol">Rol*</label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" class="inputM" id="usuario" formControlName="usuario1" placeholder="Usuario*" required>
+                                    <label for="usuario">Usuario*</label>
+                                </div>
+                                    
+                                <div class="floating-label">
+                                    <input type="text" formControlName="contrasenia" class="inputM" placeholder="Contraseña*" required>
+                                </div>
+                                
+
+
+                            
+
+                        </div>
+
+                        <div class="inputs-container mt-4">
+                            <div class="floating-label">
+                                <input type="file" class="inputM" id="imagen" (change)="onFileSelected($event)" accept="image/jpeg, image/jpg, image/png" style="width: 100%;">
+                            </div>
+                            <div *ngIf="usuarioLogged?.idRol === 1" class="floating-label">
+                                <select class="inputM" id="empresa" formControlName="idEmpresa" placeholder="empresa*" required>
+                                    <option *ngFor="let empresa of empresas" [value]="empresa.idEmpresa">{{ empresa.nombreEmpresa }}</option>
+                                </select>
+                                <label for="rol">Empresa*</label>
+                            </div>
+                            <div id="imagePreview" *ngIf="selectedImage" class="image-preview mt-3">
+                                <img [src]="selectedImage" alt="Imagen seleccionada" style="height: 150px; width: 150px;">
+                            </div>
+                        </div>
+                        
+
+                        <div class="modal-footer mt-4 d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-success" (click)="gestionarUsuario()" [disabled]="isLoading">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

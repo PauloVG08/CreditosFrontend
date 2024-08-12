@@ -85,6 +85,7 @@ export class ClientesComponent implements OnInit {
         this.clientesService.getClientes().subscribe({
             next: (data: ICliente[]) => {
                 this.clientes = data;
+                console.log(this.clientes);
                 this.filteredClientes = this.clientes;
             },
             error: (error) => {

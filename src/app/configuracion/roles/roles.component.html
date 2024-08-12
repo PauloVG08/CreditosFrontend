@@ -1,0 +1,40 @@
+<h3 class="titulo">Roles</h3>
+<div class="col-12 card shadow mb-4 p-3">
+    <fieldset class="d-flex align-items-center justify-content-between">
+        <div class="alert alert-warning m-0" role="alert">
+            En este modulo tendra la capacidad de visualizar los distintos roles de los usuarios.
+        </div>
+    </fieldset>
+</div>
+
+<div class="card shadow mb-4 p-3" id="spacesTable">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold"><i class="fa fa-user-tag"></i>&nbsp;Listado de Roles</h6>
+    </div>
+    <fieldset>
+        <div class="no-padding table-responsive" style="margin-top: 20px; font-size: 13px;">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th class="headerTable-top-left">id</th>
+                        <th>Nombre</th>
+                        <th class="headerTable-top-right">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let rol of roles" class="text-center">
+                        <td>
+                            {{ rol.idRol }}
+                        </td>
+                        <td>
+                            {{ rol.nombreRol }}
+                        </td>
+                        <td>
+                            {{ rol.descripcion }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</div>

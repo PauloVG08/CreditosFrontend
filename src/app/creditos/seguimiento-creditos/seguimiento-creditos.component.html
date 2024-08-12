@@ -32,7 +32,7 @@
                         <td>{{o.numPagos}}</td>
                         <td class="d-flex align-items-center justify-content-center">
                             <ul class="botonp list-unstyled m-0">
-                                <li *ngIf="o.estatus == 1 && o.idPromotor != 0" class="icon-content">
+                                <li *ngIf="o.estatus == 1" class="icon-content">
                                     <a aria-label="Asignar Promotor" data-social="agregar" (click)="openModalPromotor(o)">
                                         <div class="filled"></div>
                                         <i class="fas fa-user-plus"></i>

@@ -14,6 +14,7 @@ import { DetalleCreditoComponent } from './creditos/detalle-credito/detalle-cred
 import { SeguimientoCreditosComponent } from './creditos/seguimiento-creditos/seguimiento-creditos.component';
 import { PagosComponent } from './creditos/pagos/pagos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { RolesComponent } from './configuracion/roles/roles.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -30,6 +31,7 @@ export const routes: Routes = [
     { path: 'configuracion/empresas', component: EmpresaComponent, canActivate: [AuthGuard] },
     { path: 'configuracion/usuarios', component: UsuariosComponent, canActivate: [AuthGuard] },
     { path: 'configuracion/clientes', component: ClientesComponent, canActivate: [AuthGuard] },
+    { path: 'configuracion/roles', component: RolesComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'login' }
 ];

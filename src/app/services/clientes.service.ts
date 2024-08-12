@@ -30,6 +30,22 @@ export class ClientesService {
         );
     }
 
+    getCliente(idCliente: number): Observable<ICliente> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return throwError(() => new Error('No token found'));
+        }
+
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.get<{ cliente: ICliente }>(`${this.apiUrl}/${idCliente}`, { headers }).pipe(
+            map(response => response.cliente), 
+            catchError(this.handleError)
+        );
+    }
+
     insertarCliente(cliente: ICliente): Observable<ICliente> {
         const token = localStorage.getItem('token');
         if (!token) {
