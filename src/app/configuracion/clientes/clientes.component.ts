@@ -514,4 +514,12 @@ export class ClientesComponent implements OnInit {
     togglePasswordVisibility() {
         this.passwordVisible = !this.passwordVisible;
     }
+
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        maxLength = maxLength;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
 }

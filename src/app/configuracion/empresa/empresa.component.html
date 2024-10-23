@@ -24,7 +24,7 @@
         </div>
     </div>
     <fieldset>
-        <div class="no-padding table-responsive" style="margin-top: 20px; font-size: 13px;">
+        <div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr class="text-center">
@@ -66,6 +66,7 @@
         </div>
     </fieldset>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -79,11 +80,11 @@
                     <form [formGroup]="empresaForm" novalidate (ngSubmit)="guardar()">
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="nombreEmpresa" placeholder="Nombre Empresa" formControlName="nombreEmpresa">
+                                <input type="text" class="inputM" id="nombreEmpresa" placeholder="Nombre Empresa" formControlName="nombreEmpresa" (input)="limitarCaracteres($event, 60)">
                                 <label for="nombreEmpresa">Nombre Empresa</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="razonSocial" placeholder="Razón Social" formControlName="razonSocial">
+                                <input type="text" class="inputM" id="razonSocial" placeholder="Razón Social" formControlName="razonSocial" (input)="limitarCaracteres($event, 60)">
                                 <label for="razonSocial">Raz&oacute;n Social</label>
                             </div>
                             <div class="floating-label">
@@ -91,35 +92,47 @@
                                 <label for="fechaConstitucion">Fecha Constitución</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="numeroEscritura" placeholder="No. Escritura" formControlName="numeroEscritura">
+                                <input type="text" class="inputM" id="numeroEscritura" placeholder="No. Escritura" formControlName="numeroEscritura" (input)="limitarCaracteres($event, 10)">
                                 <label for="numeroEscritura">No. Escritura</label>
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="nombreNotario" placeholder="Nombre Notario" formControlName="nombreNotario">
+                                <input type="text" class="inputM" id="nombreNotario" placeholder="Nombre Notario" formControlName="nombreNotario" (input)="limitarCaracteres($event, 60)">
                                 <label for="nombreNotario">Nombre Notario</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="numeroNotario" placeholder="Número Notario" formControlName="numeroNotario">
+                                <input type="text" class="inputM" id="numeroNotario" placeholder="Número Notario" formControlName="numeroNotario" (input)="limitarCaracteres($event, 10)">
                                 <label for="numeroNotario">Número Notario</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="folioMercantil" placeholder="Folio Mercantil" formControlName="folioMercantil">
+                                <input type="text" class="inputM" id="folioMercantil" placeholder="Folio Mercantil" formControlName="folioMercantil" (input)="limitarCaracteres($event, 30)">
                                 <label for="folioMercantil">Folio Mercantil</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="rfc" placeholder="Rfc" formControlName="rfc">
-                                <label for="rfc">RFC</label>
+                                    <input 
+                                    type="text" 
+                                    class="inputM" 
+                                    id="rfc" 
+                                    placeholder="RFC" 
+                                    formControlName="rfc" 
+                                    (input)="limitarCaracteres($event, 13)">
+                                    <label for="rfc">RFC</label>
+                                    <!-- Mostrar un mensaje de error si la longitud no es válida -->
+                                    <div *ngIf="empresaForm.get('rfc')?.invalid && empresaForm.get('rfc')?.touched">
+                                        <small *ngIf="empresaForm.get('rfc')?.errors?.['minlength']" style="color: red; font-weight: bold;">
+                                            El RFC debe tener al menos 12 caracteres.
+                                        </small>
+                                    </div>
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="nombreRepresentanteLegal" placeholder="Nombre Rep. Legal" formControlName="nombreRepresentanteLegal">
+                                <input type="text" class="inputM" id="nombreRepresentanteLegal" placeholder="Nombre Rep. Legal" formControlName="nombreRepresentanteLegal" (input)="limitarCaracteres($event, 60)">
                                 <label for="nombreRepresentanteLegal">Nombre Rep. Legal</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="numeroEscrituraRepLeg" placeholder="No. Escritura Rep Leg" formControlName="numeroEscrituraRepLeg">
+                                <input type="text" class="inputM" id="numeroEscrituraRepLeg" placeholder="No. Escritura Rep Leg" formControlName="numeroEscrituraRepLeg" (input)="limitarCaracteres($event, 15)">
                                 <label for="numeroEscrituraRepLeg">No. Escritura Rep Leg</label>
                             </div>
                             <div class="floating-label">
@@ -127,39 +140,44 @@
                                 <label for="fechaInscripcion">Fecha Inscripción</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="calle" placeholder="Calle" formControlName="calle">
+                                <input type="text" class="inputM" id="calle" placeholder="Calle" formControlName="calle" (input)="limitarCaracteres($event, 60)">
                                 <label for="calle">Calle</label>
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="colonia" placeholder="Colonia" formControlName="colonia">
+                                <input type="text" class="inputM" id="colonia" placeholder="Colonia" formControlName="colonia" (input)="limitarCaracteres($event, 60)">
                                 <label for="colonia">Colonia</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="cp" placeholder="Código Postal" formControlName="cp">
+                                <input type="text" class="inputM" id="cp" placeholder="Código Postal" formControlName="cp" (input)="limitarCaracteres($event, 5)">
                                 <label for="cp">Código Postal</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="telefono" placeholder="Teléfono" formControlName="telefono">
+                                <input type="text" class="inputM" id="telefono" placeholder="Teléfono" formControlName="telefono" (input)="limitarCaracteres($event, 10)">
                                 <label for="telefono">Teléfono</label>
+                                <div *ngIf="empresaForm.get('telefono')?.invalid && empresaForm.get('telefono')?.touched">
+                                    <small *ngIf="empresaForm.get('telefono')?.errors?.['minlength']" style="color: red; font-weight: bold;">
+                                        El teléfono debe tener 10 caracteres.
+                                    </small>
+                                </div>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="estado" placeholder="Estado" formControlName="estado">
+                                <input type="text" class="inputM" id="estado" placeholder="Estado" formControlName="estado" (input)="limitarCaracteres($event, 30)">
                                 <label for="estado">Estado</label>
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="localidad" placeholder="Localidad" formControlName="localidad">
+                                <input type="text" class="inputM" id="localidad" placeholder="Localidad" formControlName="localidad" (input)="limitarCaracteres($event, 60)">
                                 <label for="localidad">Localidad</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="numExterior" placeholder="Num. Exterior" formControlName="numExterior">
+                                <input type="text" class="inputM" id="numExterior" placeholder="Num. Exterior" formControlName="numExterior" (input)="limitarCaracteres($event, 8)">
                                 <label for="numExterior">Num. Exterior</label>
                             </div>
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="numInterior" placeholder="Num. Interior" formControlName="numInterior">
+                                <input type="text" class="inputM" id="numInterior" placeholder="Num. Interior" formControlName="numInterior" (input)="limitarCaracteres($event, 8)">
                                 <label for="numInterior">Num. Interior</label>
                             </div>
                             <div class="floating-label">

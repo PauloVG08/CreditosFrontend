@@ -28,15 +28,15 @@
                     <label for="subMetodo">Submétodo</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="monto" placeholder="Monto del crédito" formControlName="monto">
+                    <input type="number" class="inputM" id="monto" placeholder="Monto del crédito" formControlName="monto" (input)="limitarCaracteres($event, 8)">
                     <label for="monto">Monto del Crédito</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="numpagos" placeholder="Número de pagos" formControlName="numPagos">
+                    <input type="number" class="inputM" id="numpagos" placeholder="Número de pagos" formControlName="numPagos" (input)="limitarCaracteres($event, 2)">
                     <label for="numpagos">Número de Pagos</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="interesMoratorio" placeholder="Interés moratorio" formControlName="interesMoratorio">
+                    <input type="number" class="inputM" id="interesMoratorio" placeholder="Interés moratorio" formControlName="interesMoratorio" (input)="limitarCaracteres($event, 2)">
                     <label for="interesMoratorio">Interés Moratorio</label>
                 </div>
             </div>
@@ -57,11 +57,11 @@
                     <label for="fechaInicio">Fecha de Inicio</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="interesAnual" placeholder="Interés anual" formControlName="interesAnual">
+                    <input type="number" class="inputM" id="interesAnual" placeholder="Interés anual" formControlName="interesAnual" (input)="limitarCaracteres($event, 2)">
                     <label for="interesAnual">Interés Anual</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="iva" placeholder="I.V.A." formControlName="iva">
+                    <input type="number" class="inputM" id="iva" placeholder="I.V.A." formControlName="iva" (input)="limitarCaracteres($event, 2)">
                     <label for="iva">I.V.A.</label>
                 </div>
                 <!-- <div class="floating-label checkbox-container">

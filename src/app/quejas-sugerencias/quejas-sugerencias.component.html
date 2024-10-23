@@ -1,0 +1,158 @@
+<h3 class="titulo">Quejas y Sugerencias</h3>
+<div class="col-12 card shadow mb-4 p-3">
+    <fieldset class="d-flex align-items-center justify-content-between">
+        <div class="alert alert-warning m-0" role="alert">
+            En este modulo tendra la capacidad de agregar quejas o sugerencias respecto al sistema.
+        </div>
+        <ul class="botonp m-0 d-flex">
+            <li class="icon-content">
+                <a aria-label="Agregar" data-social="agregar" (click)="openModal('add')">
+                    <div class="filled"></div>
+                    <i class="fa fa-plus fa-lg"></i>
+                </a>
+                <div class="tooltip">Agregar</div>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+
+<div class="card shadow mb-4 p-3" id="spacesTable">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold"><i class="fas fa-comment-dots"></i>&nbsp;Listado de quejas y sugerencias</h6>
+        <div class="floating-label">
+            <input type="text" class="inputM" placeholder="Buscar Queja" id="buscarQueja" style="width: auto;">
+            <label for="buscarQueja">Buscar Queja</label>
+        </div>
+    </div>
+    <fieldset>
+        <div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
+            <table *ngIf="quejas.length > 0" class="table table-bordered table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th class="headerTable-top-left">Tipo</th>
+                        <th>Fecha Registro</th>
+                        <th>Estatus</th>
+                        <th>Queja o Sugerencia</th>
+                        <th class="headerTable-top-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let o of quejas" class="text-center">
+                        <td>
+                            {{ o.tipo === 'Q' ? 'Queja' : (o.tipo === 'S' ? 'Sugerencia' : o.tipo) }}
+                        </td>
+                        <td>{{ o.fechaRegistro }}</td>
+                        <td>{{ o.estatus }}</td>
+                        <td>{{ o.descripcion }}</td>
+                        <td class="d-flex align-items-center justify-content-center">
+                            <ul class="botonp list-unstyled m-0">
+                                <li class="icon-content">
+                                    <a aria-label="Editar" data-social="editar" (click)="openModal('edit', o)">
+                                        <div class="filled"></div>
+                                        <i class="fas fa-pencil-alt fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="tooltip">Editar</div>
+                                </li>
+                                <li class="icon-content">
+                                    <a aria-label="limpiar" data-social="limpiar" (click)="openModalDetalles(o)">
+                                        <div class="filled"></div>
+                                        <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="tooltip">Detalles</div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="quejas.length === 0" class="text-center mt-4">
+                <h3><b style="color: red;">No cuentas con quejas o sugerencias actualmente.</b></h3>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- Modal de detalles -->
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h1 class="modal-title fs-5 w-100 text-center" id="staticBackdropLabel">{{ modalTitle }}</h1>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-lg p-4">
+                    <form [formGroup]="quejaForm" novalidate>
+                        <div class="inputs-container mt-4">
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="idQuejaSugerencia" placeholder="Id Queja" formControlName="idQuejaSugerencia">
+                                <label for="idQuejaSugerencia">Id Queja</label>
+                            </div>
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="tipo" placeholder="Tipo" formControlName="tipo">
+                                <label for="tipo">Tipo</label>
+                            </div>
+                            <div class="floating-label">
+                                <textarea class="inputM" id="descripcion" placeholder="Descripción" formControlName="descripcion"></textarea>
+                                <label for="descripcion">Descripción</label>
+                            </div>                            
+                            <div class="floating-label">
+                                <input type="date" class="inputM" id="fechaRegistro" placeholder="Fecha Registro" formControlName="fechaRegistro">
+                                <label for="fechaRegistro">Fecha Registro</label>
+                            </div>
+                        </div>
+                        <div class="inputs-container mt-4">
+                            <div class="floating-label">
+                                <input type="text" class="inputM" id="prioridad" placeholder="Prioridad" formControlName="prioridad">
+                                <label for="prioridad">Prioridad</label>
+                            </div>
+                            <div class="floating-label">
+                                <textarea class="inputM" id="comentarios" placeholder="Comentarios" formControlName="comentarios"></textarea>
+                                <label for="comentarios">Comentarios</label>
+                            </div>                            
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de guardar/editar -->
+<div class="modal fade" id="modalge" tabindex="-1" aria-labelledby="modalge" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h1 class="modal-title fs-5 w-100 text-center" id="modalge">{{ modalTitle }}</h1>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-lg p-4">
+                    <form [formGroup]="quejaForm" novalidate (ngSubmit)="guardar()">
+                        <div class="inputs-container mt-4">
+                            <div class="floating-label">
+                                <select class="inputM" id="tipo" formControlName="tipo">
+                                    <option value="" disabled selected>Tipo...</option>
+                                    <option value="Q">Queja</option>
+                                    <option value="S">Sugerencia</option>
+                                </select>
+                                <label for="tipo">Tipo</label>
+                            </div>
+                            <div class="floating-label">
+                                <textarea class="inputM" id="descripcion" placeholder="Descripción" formControlName="descripcion"></textarea>
+                                <label for="descripcion">Descripción</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-success" (click)="guardar()">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

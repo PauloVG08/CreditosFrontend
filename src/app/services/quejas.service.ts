@@ -1,19 +1,18 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
-import { IEmpresa } from '../interfaces/empresa';
-
+import { ToastrService } from 'ngx-toastr';
+import { IQuejasSugerencias } from '../interfaces/quejas_sugerencias';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
-export class EmpresasService {
-    private apiUrl = 'https://localhost:5000/api/Empresa';
+export class QuejasService {
+    private apiUrl = 'https://localhost:5000/api/QuejaSugerencium';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 
-    getEmpresas(): Observable<IEmpresa[]> {
+    getQuejas(): Observable<any[]> {
         const token = localStorage.getItem('token');
         if (!token) {
             return throwError(() => new Error('No token found'));
@@ -23,27 +22,12 @@ export class EmpresasService {
             'Authorization': `Bearer ${token}`
         });
 
-        return this.http.get<IEmpresa[]>(this.apiUrl, { headers }).pipe(
+        return this.http.get<any[]>(this.apiUrl, { headers }).pipe(
             catchError(this.handleError)
         );
     }
 
-    getEmpresa(idEmpresa: number | undefined): Observable<IEmpresa> {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return throwError(() => new Error('No token found'));
-        }
-
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
-
-        return this.http.get<IEmpresa>(`${this.apiUrl}/${idEmpresa}`, { headers }).pipe(
-            catchError(this.handleError)
-        );
-    }
-
-    guardarEmpresa(empresa: IEmpresa): Observable<IEmpresa> {
+    guardarQueja(queja: IQuejasSugerencias): Observable<IQuejasSugerencias> {
         const token = localStorage.getItem('token');
         if (!token) {
             return throwError(() => new Error('No token found'));
@@ -54,7 +38,7 @@ export class EmpresasService {
             'Authorization': `Bearer ${token}`
         });
 
-        return this.http.post<IEmpresa>(this.apiUrl, empresa, { headers })
+        return this.http.post<IQuejasSugerencias>(this.apiUrl, queja, { headers })
             .pipe(
                 catchError(error => {
                 console.error('Error saving company:', error);
@@ -63,25 +47,25 @@ export class EmpresasService {
             );
     }
 
-    actualizarEmpresa(empresa: IEmpresa): Observable<IEmpresa> {
+    actualizarQueja(queja: IQuejasSugerencias): Observable<IQuejasSugerencias> {
         const token = localStorage.getItem('token');
         if (!token) {
             return throwError(() => new Error('No token found'));
         }
-    
-        return this.http.put<IEmpresa>(`${this.apiUrl}/${empresa.idEmpresa}`, empresa, {
+
+        return this.http.put<IQuejasSugerencias>(`${this.apiUrl}/${queja.idQuejaSugerencia}`, queja, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }).pipe(
         catchError(error => {
-            console.error('Error al actualizar la empresa', error);
-            return throwError(() => new Error('Error al actualizar la empresa'));
+            console.error('Error al actualizar la queja', error);
+            return throwError(() => new Error('Error al actualizar la queja'));
         })
         );
     }
 
-    eliminarEmpresa(id: number | null): Observable<void> {
+    eliminarQueja(id: number | null): Observable<void> {
         const token = localStorage.getItem('token');
         if (!token) {
             return throwError(() => new Error('No token found'));
@@ -93,8 +77,8 @@ export class EmpresasService {
             }
         }).pipe(
             catchError(error => {
-                console.error('Error al eliminar la empresa', error);
-                return throwError(() => new Error('Error al eliminar la empresa'));
+                console.error('Error al eliminar la queja', error);
+                return throwError(() => new Error('Error al eliminar la queja'));
             })
         );
     }
@@ -102,7 +86,7 @@ export class EmpresasService {
     private handleError(error: any): Observable<never> {
         const errorMessage = `Error: ${error.status} - ${error.message}`;
         console.error('Ocurrió un error:', errorMessage);
-        this.toastr.error('No se pudieron obtener las empresas. Inténtelo de nuevo más tarde.', 'Error');
-        return throwError(() => new Error('No se pudieron obtener las empresas. Inténtelo de nuevo más tarde.'));
+        this.toastr.error('No se pudieron obtener las quejas. Inténtelo de nuevo más tarde.', 'Error');
+        return throwError(() => new Error('No se pudieron obtener las quejas. Inténtelo de nuevo más tarde.'));
     }
 }

@@ -319,3 +319,8 @@ ul {
 .table th, .table td {
     border: none; 
 }
+
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+}

@@ -42,21 +42,21 @@ export class EmpresaComponent implements OnInit {
             nombreNotario: ['', Validators.required],
             numeroNotario: ['', Validators.required],
             folioMercantil: ['', Validators.required],
-            rfc: ['', Validators.required],
+            rfc: ['', [Validators.required, Validators.minLength(12)]],
             nombreRepresentanteLegal: ['', Validators.required],
             numeroEscrituraRepLeg: ['', Validators.required],
             fechaInscripcion: ['', Validators.required],
             calle: ['', Validators.required],
             colonia: ['', Validators.required],
             cp: ['', Validators.required],
-            telefono: ['', Validators.required],
+            telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
             estado: ['', Validators.required],
             localidad: ['', Validators.required],
             numExterior: ['', Validators.required],
             numInterior: [''],
             email: ['', Validators.required],
             estatus: [1],
-            logo: ['', Validators.required],
+            logo: [''],
         });
     }
 
@@ -68,12 +68,12 @@ export class EmpresaComponent implements OnInit {
     filterEmpresas(event: any): void {
         const searchTerm = event.target.value.toLowerCase();
         this.filteredEmpresas = this.empresas.filter(empresa => 
-          empresa.razonSocial.toLowerCase().includes(searchTerm) ||
-          empresa.nombreRepresentanteLegal.toLowerCase().includes(searchTerm) ||
-          empresa.rfc.toLowerCase().includes(searchTerm) ||
-          empresa.estado.toLowerCase().includes(searchTerm)
+            empresa.razonSocial.toLowerCase().includes(searchTerm) ||
+            empresa.nombreRepresentanteLegal.toLowerCase().includes(searchTerm) ||
+            empresa.rfc.toLowerCase().includes(searchTerm) ||
+            empresa.estado.toLowerCase().includes(searchTerm)
         );
-      }
+    }
 
     openModal(mode: 'add' | 'edit', empresa?: IEmpresa): void {
         this.modalTitle = mode === 'add' ? 'Agregar Empresa' : 'Editar Empresa';
@@ -144,6 +144,7 @@ export class EmpresaComponent implements OnInit {
         this.empresasService.getEmpresas().subscribe(
             (data: any[]) => {
                 this.empresas = data;
+                console.log(this.empresas);
                 this.filteredEmpresas = this.empresas;
             },
             (error) => {
@@ -153,6 +154,29 @@ export class EmpresaComponent implements OnInit {
     }
 
     guardar(): void {
+        this.empresaForm.patchValue({ estatus: 1 });
+
+        const rfc = this.empresaForm.get('rfc')?.value;
+        console.log(rfc);
+        console.log(rfc.length);
+        if (!rfc || (rfc.length-1 !== 12-1 && rfc.length-1 !== 13)) {
+            this.toastr.warning('El RFC debe tener 12 o 13 caracteres.');
+            return;
+        }
+
+        const telefono = this.empresaForm.get('telefono')?.value;
+        console.log(telefono.length);
+        if (!telefono || telefono.length-1 !== 10) {
+            this.toastr.warning('El teléfono debe tener exactamente 10 caracteres.');
+            return;
+        }
+
+        const soloNumeros = /^[0-9]+$/;
+        if (!soloNumeros.test(telefono)) {
+            this.toastr.warning('El teléfono debe contener solo números.');
+            return;
+        }
+
         if (this.empresaForm.invalid || !this.selectedImage) {
             this.toastr.warning('Debe llenar todos los campos y seleccionar una imagen.');
             return;
@@ -239,5 +263,13 @@ export class EmpresaComponent implements OnInit {
 
     handleReaderLoaded(e: any) {
         this.selectedImage = e.target.result;
+    }
+
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        maxLength = maxLength;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
     }
 }

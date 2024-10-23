@@ -21,7 +21,7 @@
         <h6 class="m-0 font-weight-bold"><i class="fa fa-user"></i>&nbsp;Listado de usuarios</h6>
     </div>
     <fieldset>
-        <div class="no-padding table-responsive" style="margin-top: 20px; font-size: 13px;">
+        <div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr class="text-center">
@@ -80,29 +80,26 @@
                     <form [formGroup]="usuariosForm" novalidate>
                         <div class="inputs-container mt-4">
 
-                            
-
                             <!-- Campo Nombre -->
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="nombre" formControlName="nombre" placeholder="Nombre*" required>
+                                <input type="text" class="inputM" id="nombre" formControlName="nombre" placeholder="Nombre*" (ngModelChange)="limitarCaracteres($event, 40)">
                                 <label for="nombre">Nombre*</label>
                             </div>
 
                             <!-- Campo Apellido Paterno -->
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="apellidoPaterno" formControlName="apellidoPaterno" placeholder="A. Paterno*" required>
+                                <input type="text" class="inputM" id="apellidoPaterno" formControlName="apellidoPaterno" placeholder="A. Paterno*" (input)="limitarCaracteres($event, 20)">
                                 <label for="apellidoPaterno">A. Paterno*</label>
                             </div>
 
                             <!-- Campo Apellido Materno -->
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="apellidoMaterno" formControlName="apellidoMaterno" placeholder="A. Materno*" required>
+                                <input type="text" class="inputM" id="apellidoMaterno" formControlName="apellidoMaterno" placeholder="A. Materno*" (input)="limitarCaracteres($event, 20)">
                                 <label for="apellidoMaterno">A. Materno*</label>
                             </div>
 
                         </div>
                         <div class="inputs-container mt-4">
-
                                 <div class="floating-label">
                                     <select class="inputM" id="rol" formControlName="idRol" placeholder="Rol*" required>
                                         <option *ngFor="let rol of roles" [value]="rol.idRol">{{ rol.nombreRol }}</option>
@@ -110,18 +107,12 @@
                                     <label for="rol">Rol*</label>
                                 </div>
                                 <div class="floating-label">
-                                    <input type="text" class="inputM" id="usuario" formControlName="usuario1" placeholder="Usuario*" required>
+                                    <input type="text" class="inputM" id="usuario" formControlName="usuario1" placeholder="Usuario*" (input)="limitarCaracteres($event, 20)">
                                     <label for="usuario">Usuario*</label>
                                 </div>
-                                    
                                 <div class="floating-label">
                                     <input type="text" formControlName="contrasenia" class="inputM" placeholder="Contraseña*" required>
                                 </div>
-                                
-
-
-                            
-
                         </div>
 
                         <div class="inputs-container mt-4">

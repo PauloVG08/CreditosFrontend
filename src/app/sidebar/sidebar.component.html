@@ -1,60 +1,8 @@
-<!-- <div class="sidebar estilosidebar">
-    <div class="menu-header">
-        <img src="/assets/images/logoFinanclick.png" alt="Logo" class="logo">
-    </div>
-    <div class="menu-item" (click)="navigateTo('/bienvenida')">
-        <div (click)="navigateTo('/bienvenida')">
-            <i class="fas fa-home"></i> Bienvenida
-        </div>
-    </div>
-    <div class="menu-item" (click)="navigateTo('/dashboard')">
-        <div (click)="navigateTo('/bienvenida')">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </div>
-    </div>
-    <div class="menu-item" (click)="toggleMenu('simulador')">
-        <i class="fas fa-money-bill-wave"></i> Créditos
-        <div *ngIf="expandedMenu === 'simulador'" class="submenu">
-            <p class="submenu-item" (click)="navigateTo('/simulador')"><i class="fas fa-calculator"></i> Simular Crédito</p>
-            <p class="submenu-item" (click)="navigateTo('/creditos/conceptos')"><i class="fas fa-lightbulb"></i> Conceptos</p>
-            <p class="submenu-item" (click)="navigateTo('/creditos/productos')"><i class="fas fa-box-open"></i>Productos</p>
-            <p class="submenu-item" (click)="navigateTo('/creditos/seguimiento')"><i class="fas fa-wallet"></i>Seguimiento</p>
-            <p class="submenu-item" (click)="navigateTo('/creditos/pagos')"><i class="fas fa-dollar-sign"></i>Pagos</p>
-        </div>
-    </div>
-    <div class="menu-item" (click)="toggleMenu('expedientes')">
-        <i class="fa fa-folder"></i>Expedientes
-        <div *ngIf="expandedMenu === 'expedientes'" class="submenu">
-            <p class="submenu-item" (click)="navigateTo('/expedientes/documentos')"><i class="fa fa-file"></i> Documentos</p>
-            <p class="submenu-item" (click)="navigateTo('/expedientes/documentousuario')"><i class="fa fa-archive"></i> Documentos Usuario</p>
-        </div>
-    </div>
-    <div class="menu-item" (click)="toggleMenu('settings')">
-        <i class="fas fa-cogs"></i> Configuración
-        <div *ngIf="expandedMenu === 'settings'" class="submenu">
-            <p class="submenu-item" (click)="navigateTo('/configuracion/empresas')"><i class="fas fa-industry"></i> Empresa</p>
-            <p class="submenu-item" (click)="navigateTo('/configuracion/usuarios')"><i class="fas fa-users"></i> Usuarios</p>
-            <p class="submenu-item" (click)="navigateTo('/configuracion/clientes')"><i class="fas fa-handshake"></i> Clientes</p>
-            <p class="submenu-item" (click)="navigateTo('/configuracion/roles')"><i class="fas fa-user-tag"></i> Roles</p>
-        </div>
-    </div>
-    <div class="user-section">
-        <div class="user-info">
-            <img [src]="getImageUrl(usuario?.imagen)" alt="User" class="user-image">
-            <span class="user-name">{{ usuario?.nombre }}</span>
-        </div>        
-        <button (click)="logout()" class="logout-button">
-            <i class="fas fa-sign-out-alt"></i>Cerrar sesión
-        </button>
-    </div>
-</div> -->
-
-
 <div class="sidebar estilosidebar">
     <div class="menu-header">
-        <img src="/assets/images/logoFinanclick.png" alt="Logo" class="logo">
+        <img [src]="getLogoUrl(empresa.logo)" alt="Logo" class="logo">
     </div>
-    
+
     <div class="menu-item" (click)="navigateTo('/bienvenida')">
         <div>
             <i class="fas fa-home"></i> Bienvenida
@@ -94,6 +42,10 @@
             <p class="submenu-item" *ngIf="nombreRol === 'Administrador' || nombreRol === 'Administrador de la empresa' || nombreRol === 'Agente de clientes'" (click)="navigateTo('/configuracion/clientes')"><i class="fas fa-handshake"></i> Clientes</p>
             <p class="submenu-item" *ngIf="nombreRol === 'Administrador' || nombreRol === 'Administrador de la empresa'" (click)="navigateTo('/configuracion/roles')"><i class="fas fa-user-tag"></i> Roles</p>
         </div>
+    </div>
+
+    <div class="menu-item" (click)="navigateTo('/quejas_sugerencias')">
+        <i class="fas fa-comment-dots"></i> Quejas o Sugerencias
     </div>
 
     <div class="user-section">

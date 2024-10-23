@@ -77,7 +77,7 @@ export class DetalleCreditoComponent implements OnInit{
             estatus: 1,
             iva: this.simulacion.iva,
             periodicidad: this.simulacion.periodicidad,
-            fechaFirma: null, 
+            fechaFirma: null,
             fechaActivacion: null,
             numPagos: this.simulacion.numPagos,
             interesOrdinario: this.simulacion.interesAnual,
@@ -87,7 +87,7 @@ export class DetalleCreditoComponent implements OnInit{
             avals: [],
             obligados: []
         }
-
+    
         const result = await Swal.fire({
             title: '¿Agregar solicitud?',
             text: "Una vez generada la solicitud no podrá cambiar los datos.",
@@ -98,18 +98,22 @@ export class DetalleCreditoComponent implements OnInit{
             confirmButtonText: 'Sí, solicitar',
             cancelButtonText: 'Cancelar'
         });
-
+    
         if (result.isConfirmed) {
             this.creditosService.insertarCredito(this.credito).subscribe({
-                next: (response) => {
-                    this.toastr.success('Solicitud exitosa', 'Credito solicitado');
-                    this.router.navigate(['/creditos/seguimiento']);
+                next: (response: ICredito | { error: string }) => {
+                    if ('error' in response) {
+                        console.log(response);
+                        this.toastr.error(response.error, 'Error');
+                    } else {
+                        this.toastr.success('Solicitud exitosa', 'Credito solicitado');
+                        this.router.navigate(['/creditos/seguimiento']);
+                    }
                 },
                 error: (error) => {
-                    this.toastr.error('Error al insertar el credito', 'Error');
+                    this.toastr.error('Error al insertar el crédito', 'Error');
                 }
             });
         }
     }
-
 }

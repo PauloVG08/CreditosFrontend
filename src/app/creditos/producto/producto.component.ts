@@ -373,4 +373,11 @@ export class ProductoComponent implements OnInit {
             this.productos = [...this.allProductos];
         }
     }
+
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
 }

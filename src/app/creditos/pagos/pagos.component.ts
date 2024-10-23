@@ -39,6 +39,7 @@ export class PagosComponent implements OnInit {
     pagos: IPago[] = [];
     cliente: ICliente = {} as ICliente;
     nombreCliente: string = '';
+    montoDeuda: number = 0;
     
     generatePdf() {
         const doc = new jsPDF();
@@ -139,21 +140,7 @@ export class PagosComponent implements OnInit {
     }
     obtenerAmortizaciones(idCredito: number) {
         this.calcularMoratorios(idCredito);
-        this.creditosService.obtenerAmortizaciones(idCredito).subscribe({
-            next: (amortizaciones) => {
-                this.amortizacionesAct = amortizaciones;
-                //console.log(this.amortizacionesAct);
-                this.idCreditoSeleccionado = idCredito;
-                //console.log("Id Credito: " + this.idCreditoSeleccionado);
-                this.mostrarAmortizaciones = true;
-                this.mostrarTablaCreditos = false;
-                this.obtenerPagos(idCredito);
-                
-            },
-            error: (error) => {
-                this.toastr.error('No se pudieron obtener las amortizaciones. Inténtelo de nuevo más tarde.', 'Error');
-            }
-    })
+        
     //this.verificarCredito(idCredito);
     }
 
@@ -163,6 +150,23 @@ export class PagosComponent implements OnInit {
             next: (response) => {
                 //console.log(response);
                 //this.actualizarTablas();
+                this.creditosService.obtenerAmortizaciones(idCredito).subscribe({
+                    next: (amortizaciones) => {
+                        this.amortizacionesAct = amortizaciones;
+                        
+                        //console.log(this.amortizacionesAct);
+                        this.idCreditoSeleccionado = idCredito;
+                        //console.log("Id Credito: " + this.idCreditoSeleccionado);
+                        this.mostrarAmortizaciones = true;
+                        this.mostrarTablaCreditos = false;
+                        this.obtenerPagos(idCredito);
+                        
+                    },
+                    error: (error) => {
+                        this.toastr.error('No se pudieron obtener las amortizaciones. Inténtelo de nuevo más tarde.', 'Error');
+                    }
+            })
+
             },
             error: (error) => {
                 this.toastr.error('No se pudieron actualizar los moratorios. Inténtelo de nuevo más tarde.', 'Error');
@@ -245,6 +249,27 @@ export class PagosComponent implements OnInit {
             return;
         }else {
             this.pagoAplicado.montoPago = montoPago;
+        }
+
+        this.montoDeuda = 0;
+
+        for (let i = 0; i < this.amortizacionesAct.length; i++) {
+            this.montoDeuda += this.amortizacionesAct[i].capital;
+
+            if (this.amortizacionesAct[i].estatus !== 1) {
+                this.montoDeuda += this.amortizacionesAct[i].interesMasIva;
+            }
+
+            if (this.amortizacionesAct[i].estatus === 3) {
+                this.montoDeuda += this.amortizacionesAct[i].interesMoratorio;
+            }
+        }
+
+        console.log(this.montoDeuda);
+
+        if(montoPago > this.montoDeuda) {
+            this.toastr.warning('Por favor, introduce un valor menor o igual al monto deuda.');
+            return;
         }
 
         this.pagosService.registrarPago(this.pagoAplicado).subscribe({
@@ -392,5 +417,12 @@ export class PagosComponent implements OnInit {
 
         this.nombreCliente = '';
         this.creditoSeleccionado = {} as ICredito;
+    }
+
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
     }
 }

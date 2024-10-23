@@ -4,6 +4,9 @@ import { Router, RouterOutlet } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { IUsuario } from '../interfaces/usuario';
+import { IEmpresa } from '../interfaces/empresa';
+import { EmpresasService } from '../services/empresas.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-sidebar',
@@ -18,15 +21,16 @@ export class SidebarComponent implements OnInit {
     errorMessage: any;
     idRol: number | undefined = 0;
     nombreRol: string | undefined = '';
+    empresa: IEmpresa = {} as IEmpresa;
 
-    constructor(private router: Router, private loginService: LoginService) {}
+    constructor(private router: Router, private loginService: LoginService, private empresasService: EmpresasService, private toastr: ToastrService) {}
 
     ngOnInit(): void {
         this.loginService.obtenerUsuario().subscribe(
             (data) => {
                 this.usuario = data;
                 this.nombreRol = this.obtenerNombreRol();
-                console.log(this.nombreRol);
+                this.obtenerEmpresa(this.usuario?.idEmpresa || 0);
             },
             (error) => {
                 this.errorMessage = error;
@@ -62,7 +66,17 @@ export class SidebarComponent implements OnInit {
         this.nombreRol = nombreRol;
         return nombreRol;
     }
-    
+
+    obtenerEmpresa(idEmpresa: number) {
+        this.empresasService.getEmpresa(idEmpresa).subscribe(
+            (data: IEmpresa) => {
+                this.empresa = data;
+            },
+            (error) => {
+                this.toastr.error('No se pudieron obtener las empresas. Inténtelo de nuevo más tarde.', 'Error');
+            }
+        )
+    }
 
     getImageUrl(base64String: string | undefined): string {
         if (base64String) {
@@ -70,6 +84,14 @@ export class SidebarComponent implements OnInit {
             return `data:image/${this.obtenerTipoImagen(base64String)};base64,${base64String}`;
         }
         return '/assets/images/user.jpg';
+    }
+
+    getLogoUrl(base64String: string | undefined): string {
+        if (base64String?.startsWith('data:image/')) {
+            base64String = this.limpiarBase64(base64String);
+            return `data:image/${this.obtenerTipoImagen(base64String)};base64,${base64String}`;
+        }
+        return '/assets/images/logoFinanclick.png';
     }
 
     limpiarBase64(base64String: string): string {
@@ -85,7 +107,7 @@ export class SidebarComponent implements OnInit {
         if (base64String.startsWith('data:image/webp;base64,')) {
             return base64String.replace('data:image/webp;base64,', '');
         }
-        return base64String; 
+        return base64String;
     }
 
     obtenerTipoImagen(base64String: string): string {

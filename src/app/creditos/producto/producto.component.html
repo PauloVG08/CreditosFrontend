@@ -99,11 +99,11 @@
                     <form [formGroup]="productoForm" novalidate (ngSubmit)="guardar()">
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="text" class="inputM" id="nombreProducto" placeholder="Nombre Producto" formControlName="nombreProducto">
+                                <input type="text" class="inputM" id="nombreProducto" placeholder="Nombre Producto" formControlName="nombreProducto" (input)="limitarCaracteres($event, 30)">
                                 <label for="nombreProducto">Nombre Producto</label>
                             </div>
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="reca" placeholder="Reca" formControlName="reca">
+                                <input type="number" class="inputM" id="reca" placeholder="Reca" formControlName="reca" (input)="limitarCaracteres($event, 5)">
                                 <label for="reca">Reca</label>
                             </div>
                             <div class="floating-label">
@@ -123,7 +123,7 @@
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="monto">
+                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="monto" (input)="limitarCaracteres($event, 8)">
                                 <label for="monto">Monto</label>
                             </div>
                             <div class="floating-label">
@@ -136,21 +136,21 @@
                                 <label for="periodicidad">Periodicidad</label>
                             </div>
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="numPagos" placeholder="Num. Pagos" formControlName="numPagos">
+                                <input type="number" class="inputM" id="numPagos" placeholder="Num. Pagos" formControlName="numPagos" (input)="limitarCaracteres($event, 2)">
                                 <label for="numPagos">Num. Pagos</label>
                             </div>
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="interesAnual" placeholder="Inter&eacute;s anual" formControlName="interesAnual">
+                                <input type="number" class="inputM" id="interesAnual" placeholder="Inter&eacute;s anual" formControlName="interesAnual" (input)="limitarCaracteres($event, 2)">
                                 <label for="interesAnual">Inter&eacute;s anual</label>
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="iva" placeholder="IVA" formControlName="iva">
+                                <input type="number" class="inputM" id="iva" placeholder="IVA" formControlName="iva" (input)="limitarCaracteres($event, 2)">
                                 <label for="iva">IVA</label>
                             </div>
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="interesMoratorio" placeholder="Inter&eacute;s moratorio" formControlName="interesMoratorio">
+                                <input type="number" class="inputM" id="interesMoratorio" placeholder="Inter&eacute;s moratorio" formControlName="interesMoratorio" (input)="limitarCaracteres($event, 2)">
                                 <label for="interesMoratorio">Inter&eacute;s moratorio</label>
                             </div>
                             <div class="floating-label">
@@ -167,7 +167,7 @@
                                     <option value="reduccionPlazo" >Reducción de plazo</option>
                                     <option value="reduccionPago">Reducción de pago</option>
                                 </select>
-                                <label for="pagoAnticipado">Aplicaci&oacute;n de Pagos</label>
+                                <label for="pagoAnticipado">Pago anticipado</label>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center mt-4">

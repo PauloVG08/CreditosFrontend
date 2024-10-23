@@ -12,7 +12,7 @@
         <h6 class="m-0 font-weight-bold"><i class="fa fa-folder"></i>&nbsp;Listado de Créditos Activos</h6>
     </div>
     <fieldset>
-        <div class="no-padding table-responsive" style="margin-top: 20px; font-size: 13px;">
+        <div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr class="text-center">
@@ -159,41 +159,41 @@
   <h6 class="m-0 font-weight-bold"><i class="fas fa-chart-line"></i> Amortizaciones del crédito</h6>
 </div>
 
-<mat-accordion>
-  <mat-expansion-panel *ngFor="let amortizacion of amortizacionesAct; let i = index">
-    <mat-expansion-panel-header>
-      <div class="status-circle" [ngClass]="getStatusClass(amortizacion.estatus)"></div>
-      <mat-panel-title>
-        Pago {{ i + 1 }} - Fecha: {{ amortizacion.fechaInicio | date:'dd/MM/yyyy' }} a {{ amortizacion.fechaFin | date:'dd/MM/yyyy' }}
-        - Estatus: {{ estatusAmortizacion }}
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-card>
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th class="text-center">Saldo Insoluto</th>
-              <th class="text-center">Capital</th>
-              <th class="text-center">Interés Total</th>
-              <th class="text-center">Moratorio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-center">
-              <td>{{ amortizacion.saldoInsoluto | currency }}</td>
-              <td>{{ amortizacion.capital | currency }}</td>
-              <td>{{ amortizacion.interesMasIva | currency }}</td>
-              <td>{{ amortizacion.interesMoratorio | currency }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </mat-card>
-  </mat-expansion-panel>
-</mat-accordion>
-
-      
+<div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let amortizacion of amortizacionesAct; let i = index">
+          <mat-expansion-panel-header>
+            <div class="status-circle" [ngClass]="getStatusClass(amortizacion.estatus)"></div>
+            <mat-panel-title>
+              Pago {{ i + 1 }} - Fecha: {{ amortizacion.fechaInicio | date:'dd/MM/yyyy' }} a {{ amortizacion.fechaFin | date:'dd/MM/yyyy' }}
+              - Estatus: {{ estatusAmortizacion }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-card>
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th class="text-center">Saldo Insoluto</th>
+                    <th class="text-center">Capital</th>
+                    <th class="text-center">Interés Total</th>
+                    <th class="text-center">Moratorio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                    <td>{{ amortizacion.saldoInsoluto | currency }}</td>
+                    <td>{{ amortizacion.capital | currency }}</td>
+                    <td>{{ amortizacion.interesMasIva | currency }}</td>
+                    <td>{{ amortizacion.interesMoratorio | currency }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-accordion>
+</div>
 
 <div *ngIf="mostrarPagos" class="col-12 card shadow mb-4 p-3 mt-3">
     <fieldset class="d-flex align-items-center justify-content-between">
@@ -204,7 +204,7 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold"><i class="fas fa-dollar-sign"></i> Pagos del crédito</h6>
     </div>
-    <div class="table-responsive">
+    <div class="table-wrapper" style="margin-top: 20px; font-size: 13px;">
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -266,7 +266,7 @@
                                 <label for="id">Id Credito</label>
                             </div> -->
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="montoPago">
+                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="montoPago" (input)="limitarCaracteres($event, 8)">
                                 <label for="monto">Monto</label>
                             </div>
                         </div>

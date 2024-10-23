@@ -44,14 +44,19 @@ export class CreditosService {
             'Authorization': `Bearer ${token}`
         };
 
-        return this.http.post<ICredito>(this.apiUrl, credito, {
-            headers}).pipe(
-                catchError(error => {
-                    console.error('Error saving client:', error);
+        return this.http.post<ICredito>(this.apiUrl, credito, { headers }).pipe(
+            catchError(error => {
+                console.error('Error saving client:', error);
+
+                if (error.error && error.error.error === "Faltan documentos por aprobar") {
+                    this.toastr.error('Hay documentos por aprobarle al cliente.', 'Error');
+                } else {
                     this.toastr.error('Error al guardar el cliente.');
-                    return throwError(() => new Error('Error saving client'));
-                })
-            )
+                }
+    
+                return throwError(() => new Error(error.error ? error.error.error : 'Error saving client'));
+            })
+        );
     }
 
     actualizarCredito(credito: ICredito): Observable<ICredito> {

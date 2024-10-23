@@ -209,4 +209,11 @@ export class SimuladorVistaComponent implements OnInit {
             state: { data }
         });
     }
+
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
 }
