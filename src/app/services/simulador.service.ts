@@ -10,7 +10,7 @@ import { IAmortizacion } from '../interfaces/amortizacion';
     providedIn: 'root'
 })
 export class SimuladorService {
-    private apiUrl = 'https://localhost:5000/api/simulacion';
+    private apiUrl = 'https://financlick.somee.com/api/simulacion';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

@@ -7,8 +7,8 @@ import { catchError, Observable, throwError } from 'rxjs';
     providedIn: 'root'
 })
 export class DashboardService {
-    private apiUrl = 'https://localhost:5000/api/Credito';
-    private apiUrlPago = 'https://localhost:5000/api/Pagos';
+    private apiUrl = 'https://financlick.somee.com/api/Credito';
+    private apiUrlPago = 'https://financlick.somee.com/api/Pagos';
 
     constructor(private httpClient: HttpClient, private toastr: ToastrService) { }
 

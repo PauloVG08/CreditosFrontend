@@ -9,7 +9,7 @@ import { IAmortizacionActiva } from '../interfaces/amortizacionActiva';
     providedIn: 'root'
 })
 export class CreditosService {
-    private apiUrl = 'https://localhost:5000/api/Credito';
+    private apiUrl = 'https://financlick.somee.com/api/Credito';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

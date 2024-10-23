@@ -8,7 +8,7 @@ import { IProducto } from '../interfaces/producto';
     providedIn: 'root'
 })
 export class ProductosService {
-    private apiUrl = 'https://localhost:5000/api/Producto'
+    private apiUrl = 'https://financlick.somee.com/api/Producto'
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

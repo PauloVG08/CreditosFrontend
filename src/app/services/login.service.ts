@@ -7,7 +7,7 @@ import { IUsuario } from '../interfaces/usuario';
     providedIn: 'root'
 })
 export class LoginService {
-    private apiUrl = 'https://localhost:5000/api/Usuario';
+    private apiUrl = 'https://financlick.somee.com/api/Usuario';
     private usuario: IUsuario | null = null;
     isLoading = false;
 

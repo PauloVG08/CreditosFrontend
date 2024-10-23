@@ -8,7 +8,7 @@ import { IConcepto } from '../interfaces/concepto';
     providedIn: 'root'
 })
 export class CatConceptoService {
-    private apiUrl = 'https://localhost:5000/api/CatConcepto';
+    private apiUrl = 'https://financlick.somee.com/api/CatConcepto';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

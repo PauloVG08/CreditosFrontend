@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
     providedIn: 'root'
 })
 export class DocumentosService {
-    private apiUrl = 'https://localhost:5000/api/Documento';
+    private apiUrl = 'https://financlick.somee.com/api/Documento';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 
