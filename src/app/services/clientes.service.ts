@@ -11,6 +11,7 @@ import { IUsuarioCliente } from '../interfaces/usuarioCliente';
 export class ClientesService {
     private apiUrl = 'https://localhost:5000/api/Cliente';
     private apiUrlUC = 'https://localhost:5000/api/UsuarioCliente';
+    private apiUrlDoc = 'https://localhost:5000/api/DocumentoCliente';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 
@@ -156,6 +157,29 @@ export class ClientesService {
             catchError(error => {
                 console.error('Error al actualizar el usuario', error);
                 return throwError(() => new Error('Error al actualizar el usuario'));
+            })
+        );
+    }
+
+    asignarDocumentosPorTipo(idCliente: number, tipo: 'FISICA' | 'MORAL'): Observable<void> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return throwError(() => new Error('No token found'));
+        }
+    
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        });
+    
+        const endpoint = tipo === 'FISICA' ? 'asignar-todos-fisica' : 'asignar-todos-moral';
+        console.log(endpoint);
+        console.log(this.apiUrl + '/' + endpoint + '/' + idCliente);
+    
+        return this.http.post<void>(`${this.apiUrlDoc}/${endpoint}/${idCliente}`, {}, { headers }).pipe(
+            catchError(error => {
+                console.error('Error assigning documents:', error);
+                return throwError(() => new Error('Error assigning documents'));
             })
         );
     }

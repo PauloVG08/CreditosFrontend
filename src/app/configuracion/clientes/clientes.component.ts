@@ -159,46 +159,48 @@ export class ClientesComponent implements OnInit {
         if (regimenFiscalControl) {
             regimenFiscalControl.enable();
         }
-
+    
         const regimenFiscal = this.clienteForm.get('regimenFiscal')?.value;
         const idCliente = this.clienteForm.get('idCliente')?.value;
         let clienteData = this.clienteForm.value;
-
+    
         // Validar campos según el régimen fiscal
         if (regimenFiscal === 'FISICA') {
-            // Validar campos de persona física y vaciar datos morales
             if (!this.validateDatosClienteFisicas()) {
                 this.toastr.warning('Por favor, complete todos los campos obligatorios de Persona Física.', 'Formulario inválido');
                 return;
             }
             clienteData.datosClienteMorals = [];
         } else if (regimenFiscal === 'MORAL') {
-            // Validar campos de persona moral y vaciar datos físicos
             if (!this.validateDatosClienteMorals()) {
                 this.toastr.warning('Por favor, complete todos los campos obligatorios de Persona Moral.', 'Formulario inválido');
                 return;
             }
             clienteData.datosClienteFisicas = [];
         }
-
-        // Ajustar los datos según el régimen fiscal
+    
         clienteData.datosClienteFisicas = clienteData.datosClienteFisicas || [];
         clienteData.datosClienteMorals = clienteData.datosClienteMorals || [];
-
-        // Verificar si al menos uno de los arreglos tiene datos
+    
         const tieneDatosFisicos = clienteData.datosClienteFisicas.length > 0;
         const tieneDatosMorales = clienteData.datosClienteMorals.length > 0;
-
+        console.log('Datos a enviar:', clienteData);
+    
         if (idCliente === 0) {
             if (tieneDatosFisicos || tieneDatosMorales) {
-                // Insertar cliente
                 this.clientesService.insertarCliente(clienteData).subscribe({
-                    next: (data) => {
+                    next: (nuevoCliente) => {
                         this.obtenerClientes();
                         this.closeModal();
                         this.toastr.success('Cliente insertado correctamente', 'Éxito');
+
+                        // Asignar documentos automáticamente según el régimen fiscal sin mostrar mensaje de éxito
+                        const tipo = clienteData.regimenFiscal;
+                        this.clientesService.asignarDocumentosPorTipo(nuevoCliente.idCliente, tipo).subscribe({
+                            error: () => this.toastr.error('Error al asignar documentos automáticamente', 'Error')
+                        });
                     },
-                    error: (err) => {
+                    error: () => {
                         this.toastr.error('Error al insertar el cliente', 'Error');
                     }
                 });
@@ -207,24 +209,23 @@ export class ClientesComponent implements OnInit {
             }
         } else {
             if (this.clienteForm.valid) {
-                // Editar cliente
                 this.clientesService.actualizarCliente(clienteData).subscribe({
-                    next: (data) => {
+                    next: () => {
                         this.obtenerClientes();
                         this.closeModal();
                         this.toastr.success('Cliente editado correctamente', 'Éxito');
-                    }
-                })
+                    },
+                    error: () => this.toastr.error('Error al actualizar el cliente', 'Error')
+                });
             } else {
                 this.toastr.error('Por favor, complete los campos obligatorios', 'Formulario inválido');
             }
         }
-
-        // Deshabilitar el control de régimen fiscal en modo editar
+    
         if (regimenFiscalControl && this.modalTitle === 'Editar Cliente') {
             regimenFiscalControl.disable();
         }
-    }
+    }    
 
     // Validar los campos de persona física
     validateDatosClienteFisicas(): boolean {

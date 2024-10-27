@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DocumentosService {
     private apiUrl = 'https://localhost:5000/api/Documento';
+    private apiUrlDC = 'https://localhost:5000/api/DocumentoCliente';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 
@@ -82,6 +83,26 @@ export class DocumentosService {
             })
         );
     }
+
+    asignarDocumentoATodos(tipo: 'FISICA' | 'MORAL', idDocumento: number): Observable<void> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return throwError(() => new Error('No token found'));
+        }
+    
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        });
+    
+        // Enviar `idDocumento` como un número plano en el cuerpo
+        return this.http.post<void>(`${this.apiUrlDC}/asignar-a-todos/${tipo}`, idDocumento, { headers }).pipe(
+            catchError(error => {
+                console.error('Error al asignar documento a todos los clientes:', error);
+                return throwError(() => new Error('Error al asignar documento a todos los clientes'));
+            })
+        );
+    }    
 
     private handleError(error: any): Observable<never> {
         const errorMessage = `Error: ${error.status} - ${error.message}`;

@@ -275,109 +275,109 @@ export class DocumentousuarioComponent implements OnInit {
         reader.readAsDataURL(file);
     }
 
-    openAsignarDocumentosModal(idCliente: number, regimenFiscal: string): void {
-        const cliente = this.clientes.find(c => c.idCliente === idCliente);
-        if (cliente) {
-            if (regimenFiscal === 'MORAL') {
-                this.clienteNombre = cliente.datosClienteMorals && cliente.datosClienteMorals.length > 0
-                    ? cliente.datosClienteMorals[0].nombreRepLegal || 'N/A'
-                    : 'N/A';
-                this.clienteTipo = 'Moral';
-            } else {
-                this.clienteNombre = cliente.datosClienteFisicas && cliente.datosClienteFisicas.length > 0
-                    ? cliente.datosClienteFisicas[0].idPersonaNavigation
-                        ? (cliente.datosClienteFisicas[0].idPersonaNavigation.nombre + ' '
-                            + cliente.datosClienteFisicas[0].idPersonaNavigation.apellidoPaterno + ' '
-                            + cliente.datosClienteFisicas[0].idPersonaNavigation.apellidoMaterno)
-                        : 'N/A'
-                    : 'N/A';
-                this.clienteTipo = 'Física';
-            }
-        }
+    // openAsignarDocumentosModal(idCliente: number, regimenFiscal: string): void {
+    //     const cliente = this.clientes.find(c => c.idCliente === idCliente);
+    //     if (cliente) {
+    //         if (regimenFiscal === 'MORAL') {
+    //             this.clienteNombre = cliente.datosClienteMorals && cliente.datosClienteMorals.length > 0
+    //                 ? cliente.datosClienteMorals[0].nombreRepLegal || 'N/A'
+    //                 : 'N/A';
+    //             this.clienteTipo = 'Moral';
+    //         } else {
+    //             this.clienteNombre = cliente.datosClienteFisicas && cliente.datosClienteFisicas.length > 0
+    //                 ? cliente.datosClienteFisicas[0].idPersonaNavigation
+    //                     ? (cliente.datosClienteFisicas[0].idPersonaNavigation.nombre + ' '
+    //                         + cliente.datosClienteFisicas[0].idPersonaNavigation.apellidoPaterno + ' '
+    //                         + cliente.datosClienteFisicas[0].idPersonaNavigation.apellidoMaterno)
+    //                     : 'N/A'
+    //                 : 'N/A';
+    //             this.clienteTipo = 'Física';
+    //         }
+    //     }
 
-        this.idClienteSeleccionado = idCliente;
+    //     this.idClienteSeleccionado = idCliente;
 
-        this.documentPorClienteService.getDocumentosAsignados(idCliente).subscribe({
-            next: (documentosAsignados) => {
-                console.log(documentosAsignados);
-                this.documentosAsignadosIds = documentosAsignados.map(doc => doc.idDocumento);
+    //     this.documentPorClienteService.getDocumentosAsignados(idCliente).subscribe({
+    //         next: (documentosAsignados) => {
+    //             console.log(documentosAsignados);
+    //             this.documentosAsignadosIds = documentosAsignados.map(doc => doc.idDocumento);
 
-                // Filtrar todos los documentos del régimen fiscal seleccionado
-                this.documentosFiltrados = this.documentos.filter(doc => doc.tipo === regimenFiscal);
+    //             // Filtrar todos los documentos del régimen fiscal seleccionado
+    //             this.documentosFiltrados = this.documentos.filter(doc => doc.tipo === regimenFiscal);
 
-                this.documentosAsignarForm = this.fb.group({});
+    //             this.documentosAsignarForm = this.fb.group({});
 
-                this.documentosFiltrados.forEach(documento => {
-                    const isAsignado = this.documentosAsignadosIds.includes(documento.idCatalogoDocumento);
-                    this.documentosAsignarForm.addControl(
-                        documento.idCatalogoDocumento.toString(),
-                        new FormControl({ value: isAsignado, disabled: true }) // Deshabilitar todos los checkboxes
-                    );
-                });
+    //             this.documentosFiltrados.forEach(documento => {
+    //                 const isAsignado = this.documentosAsignadosIds.includes(documento.idCatalogoDocumento);
+    //                 this.documentosAsignarForm.addControl(
+    //                     documento.idCatalogoDocumento.toString(),
+    //                     new FormControl({ value: isAsignado, disabled: true }) // Deshabilitar todos los checkboxes
+    //                 );
+    //             });
 
-                const modalElement = this.elementRef.nativeElement.querySelector('#asignarModal');
-                if (modalElement) {
-                    const modalInstance = new (window as any).bootstrap.Modal(modalElement, {
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                    modalInstance.show();
-                }
-            },
-            error: (error) => {
-                console.error('Error al obtener documentos asignados:', error);
-                this.toastr.error('No se pudo obtener la lista de documentos asignados. Inténtelo de nuevo más tarde.', 'Error');
-            }
-        });
-        this.modalTitle = `Asignar documentos a: ${this.clienteNombre} (${this.clienteTipo})`;
-    }
+    //             const modalElement = this.elementRef.nativeElement.querySelector('#asignarModal');
+    //             if (modalElement) {
+    //                 const modalInstance = new (window as any).bootstrap.Modal(modalElement, {
+    //                     backdrop: 'static',
+    //                     keyboard: false
+    //                 });
+    //                 modalInstance.show();
+    //             }
+    //         },
+    //         error: (error) => {
+    //             console.error('Error al obtener documentos asignados:', error);
+    //             this.toastr.error('No se pudo obtener la lista de documentos asignados. Inténtelo de nuevo más tarde.', 'Error');
+    //         }
+    //     });
+    //     this.modalTitle = `Asignar documentos a: ${this.clienteNombre} (${this.clienteTipo})`;
+    // }
 
-    toggleAsignacion(idDocumento: number): void {
-        let idCliente = this.idClienteSeleccionado;
-        const isAsignado = this.documentosAsignadosIds.includes(idDocumento);
+    // toggleAsignacion(idDocumento: number): void {
+    //     let idCliente = this.idClienteSeleccionado;
+    //     const isAsignado = this.documentosAsignadosIds.includes(idDocumento);
 
-        if (isAsignado) {
-            this.desasignarDocumento(idDocumento);
-        } else {
-            this.asignarDocumento(idDocumento);
-        }
-    }
+    //     if (isAsignado) {
+    //         this.desasignarDocumento(idDocumento);
+    //     } else {
+    //         this.asignarDocumento(idDocumento);
+    //     }
+    // }
 
-    asignarDocumento(idDocumento: number): void {
-        let idCliente = this.idClienteSeleccionado;
-        console.log(idCliente, idDocumento);
+    // asignarDocumento(idDocumento: number): void {
+    //     let idCliente = this.idClienteSeleccionado;
+    //     console.log(idCliente, idDocumento);
 
-        this.documentPorClienteService.asignarDocumento(idCliente, idDocumento).subscribe({
-            next: (response) => {
-                this.toastr.success('Documento asignado exitosamente.', 'Éxito');
-                this.documentosAsignadosIds.push(idDocumento);
-                console.log(this.documentosAsignadosIds);
-                this.cerrarModalAsignar();
-            },
-            error: (error) => {
-                console.error('Error al asignar el documento:', error);
-                this.toastr.error('No se pudo asignar el documento. Inténtelo de nuevo más tarde.', 'Error');
-            }
-        });
-    }
+    //     this.documentPorClienteService.asignarDocumento(idCliente, idDocumento).subscribe({
+    //         next: (response) => {
+    //             this.toastr.success('Documento asignado exitosamente.', 'Éxito');
+    //             this.documentosAsignadosIds.push(idDocumento);
+    //             console.log(this.documentosAsignadosIds);
+    //             this.cerrarModalAsignar();
+    //         },
+    //         error: (error) => {
+    //             console.error('Error al asignar el documento:', error);
+    //             this.toastr.error('No se pudo asignar el documento. Inténtelo de nuevo más tarde.', 'Error');
+    //         }
+    //     });
+    // }
 
-    desasignarDocumento(idDocumento: number): void {
-        let idCliente = this.idClienteSeleccionado;
-        console.log(idCliente, idDocumento);
+    // desasignarDocumento(idDocumento: number): void {
+    //     let idCliente = this.idClienteSeleccionado;
+    //     console.log(idCliente, idDocumento);
 
-        this.documentPorClienteService.desasignarDocumento(idCliente, idDocumento).subscribe({
-            next: (response) => {
-                this.toastr.success('Documento asignado exitosamente.', 'Éxito');
-                this.documentosAsignadosIds = this.documentosAsignadosIds.filter(id => id !== idDocumento);
-                console.log(this.documentosAsignadosIds);
-                this.cerrarModalAsignar();
-            },
-            error: (error) => {
-                console.error('Error al asignar el documento:', error);
-                this.toastr.error('No se pudo asignar el documento. Inténtelo de nuevo más tarde.', 'Error');
-            }
-        });
-    }
+    //     this.documentPorClienteService.desasignarDocumento(idCliente, idDocumento).subscribe({
+    //         next: (response) => {
+    //             this.toastr.success('Documento asignado exitosamente.', 'Éxito');
+    //             this.documentosAsignadosIds = this.documentosAsignadosIds.filter(id => id !== idDocumento);
+    //             console.log(this.documentosAsignadosIds);
+    //             this.cerrarModalAsignar();
+    //         },
+    //         error: (error) => {
+    //             console.error('Error al asignar el documento:', error);
+    //             this.toastr.error('No se pudo asignar el documento. Inténtelo de nuevo más tarde.', 'Error');
+    //         }
+    //     });
+    // }
 
     cerrarModalAsignar(): void {
         const modalElement = this.elementRef.nativeElement.querySelector('#asignarModal');

@@ -3,6 +3,6 @@ export interface IDocumento {
     nombre: string
     tipo: string
     estatus: number
-    idEmpresa: number
+    idEmpresa?: number
     estatusSeguimiento?: number
 }

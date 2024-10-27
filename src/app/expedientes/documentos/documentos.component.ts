@@ -131,41 +131,57 @@ export class DocumentosComponent implements OnInit {
     }
 
     guardar() {
-        if (this.documentoForm.invalid){
+        if (this.documentoForm.invalid) {
             this.toastr.warning('Debe llenar todos los campos', 'Advertencia');
             return;
         }
-
+    
         let documento: IDocumento = this.documentoForm.value;
-
-        if(documento.idCatalogoDocumento){
+        documento.estatus = 1;
+    
+        if (documento.idCatalogoDocumento) {
             this.documentosService.actualizarDocumento(documento).subscribe({
-                next: (response) => {
-                    this.toastr.success('Documento actualizado con exito', 'Actualizado');
+                next: () => {
+                    this.toastr.success('Documento actualizado con éxito', 'Actualizado');
                     this.closeModal();
                     this.obtenerDocumentos();
                 },
                 error: (error) => {
-                    this.toastr.error('Error al actualizar el documento', 'Error');
+                    // console.error('Error al actualizar el documento:', error);
+                    // this.toastr.error('Error al actualizar el documento', 'Error');
                 }
             });
         } else {
             documento.idCatalogoDocumento = 0;
-            documento.estatus = 1;
-            documento.idEmpresa = 1;
-
+            documento.idEmpresa = 0;
             this.documentosService.guardarDocumento(documento).subscribe({
-                next: (response) => {
-                    this.toastr.success('Documento guardado con exito', 'Guardado');
+                next: (nuevoDocumento) => {
                     this.closeModal();
                     this.obtenerDocumentos();
+                    this.toastr.success('Documento guardado con éxito', 'Guardado');
+    
+                    if (documento.tipo === "FISICA" || documento.tipo === "MORAL") {
+                        this.documentosService.asignarDocumentoATodos(documento.tipo, nuevoDocumento.idCatalogoDocumento).subscribe({
+                            next: () => {
+                                this.toastr.success('Documento asignado a todos los clientes con éxito', 'Asignación exitosa');
+                            },
+                            error: (error) => {
+                                // console.error('Error al asignar el documento a todos los clientes:', error);
+                                // this.toastr.error('Error al asignar el documento a todos los clientes', 'Error');
+                                console.log(error)
+                            }
+                        });
+                    } else {
+                        this.toastr.error('Tipo de documento no válido para la asignación', 'Error');
+                    }
                 },
                 error: (error) => {
+                    console.error('Error al guardar el documento:', error);
                     this.toastr.error('Error al guardar el documento', 'Error');
                 }
-            })
+            });
         }
-    }
+    }      
 
     closeModal() {
         const modalElement = this.elementRef.nativeElement.querySelector('#staticBackdrop');
