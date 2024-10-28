@@ -134,16 +134,20 @@
                                         </div>
                                     </div>
                                     <div class="inputs-container mt-4">
-                                        <div class="floating-label">
-                                            <input type="text" class="inputM" id="paisNacimiento" formControlName="paisNacimiento" placeholder="Pais Nacimiento*" (input)="limitarCaracteres($event, 30)">
+                                        <!-- <div class="floating-label" style="display: none;">
+                                            <input type="text" value="NA" class="inputM" id="paisNacimiento" formControlName="paisNacimiento" placeholder="Pais Nacimiento*" (input)="limitarCaracteres($event, 30)">
                                             <label for="paisNacimiento">Pais Nacimiento*</label>
-                                        </div>
+                                        </div> -->
                                         <div class="floating-label">
                                             <input type="text" class="inputM" id="estadoNacimiento" formControlName="estadoNacimiento" placeholder="Estado Nacimiento*" (input)="limitarCaracteres($event, 30)">
                                             <label for="estadoNacimiento">Estado Nacimiento*</label>
                                         </div>
                                         <div class="floating-label">
-                                            <input type="text" class="inputM" id="genero" formControlName="genero" placeholder="Género*" (input)="limitarCaracteres($event, 10)">
+                                            <select class="inputM" id="genero" formControlName="genero" placeholder="Género*">
+                                                <option value="" disabled selected>Género*</option>
+                                                <option value="MASCULINO">MASCULINO</option>
+                                                <option value="FEMENINO">FEMENINO</option>
+                                            </select>
                                             <label for="genero">Género*</label>
                                         </div>
                                         <div class="floating-label">
@@ -151,33 +155,33 @@
                                             <label for="rfc">RFC*</label>
                                         </div>
                                     </div>                                    
-                                    <div class="inputs-container mt-4">
+                                    <!-- <div class="inputs-container mt-4" style="display: none;">
                                         <div class="floating-label">
-                                            <input type="text" class="inputM" id="curp" formControlName="curp" placeholder="CURP*" (input)="limitarCaracteres($event, 18)">
+                                            <input type="text" value="NA" class="inputM" id="curp" formControlName="curp" placeholder="CURP*" (input)="limitarCaracteres($event, 18)">
                                             <label for="curp">CURP*</label>
                                         </div>
-                                        <div class="floating-label">
-                                            <input type="text" class="inputM" id="claveElector" formControlName="claveElector" placeholder="Clave Elector" (input)="limitarCaracteres($event, 18)">
+                                        <div class="floating-label" >
+                                            <input type="text" value="NA" class="inputM" id="claveElector" formControlName="claveElector" placeholder="Clave Elector" (input)="limitarCaracteres($event, 18)">
                                             <label for="claveElector">Clave Elector</label>
                                         </div>
                                         <div class="floating-label">
-                                            <input type="text" class="inputM" id="nacionalidad" formControlName="nacionalidad" placeholder="Nacionalidad*" (input)="limitarCaracteres($event, 30)">
+                                            <input type="text" value="NA" class="inputM" id="nacionalidad" formControlName="nacionalidad" placeholder="Nacionalidad*" (input)="limitarCaracteres($event, 30)">
                                             <label for="nacionalidad">Nacionalidad*</label>
                                         </div>
                                         <div class="floating-label">
-                                            <input type="text" class="inputM" id="estadoCivil" formControlName="estadoCivil" placeholder="Estado Civil" (input)="limitarCaracteres($event, 30)">
+                                            <input type="text" value="NA" class="inputM" id="estadoCivil" formControlName="estadoCivil" placeholder="Estado Civil" (input)="limitarCaracteres($event, 30)">
                                             <label for="estadoCivil">Estado Civil</label>
                                         </div>
-                                    </div>                                    
+                                    </div>                                     -->
                                     <div class="inputs-container mt-4">
-                                        <div class="floating-label">
-                                            <input type="text" class="inputM" id="regimenMatrimonial" formControlName="regimenMatrimonial" placeholder="Regimen Matrimonial" (input)="limitarCaracteres($event, 30)">
+                                        <!-- <div class="floating-label" style="display: none;">
+                                            <input type="text" value="NA" class="inputM" id="regimenMatrimonial" formControlName="regimenMatrimonial" placeholder="Regimen Matrimonial" (input)="limitarCaracteres($event, 30)">
                                             <label for="regimenMatrimonial">Regimen Matrimonial</label>
                                         </div>
-                                        <div class="floating-label">
-                                            <input type="text" class="inputM" id="nombreConyuge" formControlName="nombreConyuge" placeholder="Nombre Conyuge" (input)="limitarCaracteres($event, 50)">
+                                        <div class="floating-label" style="display: none;">
+                                            <input type="text" value="NA" class="inputM" id="nombreConyuge" formControlName="nombreConyuge" placeholder="Nombre Conyuge" (input)="limitarCaracteres($event, 50)">
                                             <label for="nombreConyuge">Nombre Conyuge</label>
-                                        </div>
+                                        </div> -->
                                         <div class="floating-label">
                                             <input type="text" class="inputM" id="calle" formControlName="calle" placeholder="Calle*" (input)="limitarCaracteres($event, 30)">
                                             <label for="calle">Calle*</label>
@@ -189,6 +193,16 @@
                                     </div>
                                     <div class="inputs-container mt-4">
                                         <div class="floating-label">
+                                            <input type="text" class="inputM" id="codigoPostal" formControlName="codigoPostal" placeholder="Código Postal*" 
+                                                   (input)="limitarCaracteres($event, 5); obtenerCodigoPostalChange($event)">
+                                            <label for="codigoPostal">Código Postal*</label>
+                                            <div style="text-align: right;">
+                                                <button type="button" class="btn btn-primary" (click)="obtenerCodigoPostal()">
+                                                    <i class="fas fa-search"></i>&nbsp;Buscar
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="floating-label">
                                             <input type="text" class="inputM" id="numInterior" formControlName="numInterior" placeholder="Num Interior" (input)="limitarCaracteres($event, 6)">
                                             <label for="numInterior">Num Interior</label>
                                         </div>
@@ -196,10 +210,7 @@
                                             <input type="text" class="inputM" id="colonia" formControlName="colonia" placeholder="Colonia*" (input)="limitarCaracteres($event, 30)">
                                             <label for="colonia">Colonia*</label>
                                         </div>
-                                        <div class="floating-label">
-                                            <input type="text" class="inputM" id="codigoPostal" formControlName="codigoPostal" placeholder="Código Postal*" (input)="limitarCaracteres($event, 5)">
-                                            <label for="codigoPostal">Código Postal*</label>
-                                        </div>
+                                        
                                         <div class="floating-label">
                                             <input type="text" class="inputM" id="paisResidencia" formControlName="paisResidencia" placeholder="Pais Residencia*" (input)="limitarCaracteres($event, 30)">
                                             <label for="paisResidencia">Pais Residencia*</label>
@@ -320,8 +331,14 @@
                                             <label for="colonia">Colonia*</label>
                                         </div>
                                         <div class="floating-label">
-                                            <input type="text" class="inputM" id="codigoPostal" formControlName="codigoPostal" placeholder="Código Postal*" (input)="limitarCaracteres($event, 5)">
+                                            <input type="text" class="inputM" id="codigoPostal" formControlName="codigoPostal" placeholder="Código Postal*" 
+                                                   (input)="limitarCaracteres($event, 5); obtenerCodigoPostalChange($event)">
                                             <label for="codigoPostal">Código Postal*</label>
+                                            <div style="text-align: right;">
+                                                <button type="button" class="btn btn-primary" (click)="obtenerCodigoPostal()">
+                                                    <i class="fas fa-search"></i>&nbsp;Buscar
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="floating-label">
                                             <input type="text" class="inputM" id="paisResidencia" formControlName="paisResidencia" placeholder="Pais Residencia*" (input)="limitarCaracteres($event, 30)">

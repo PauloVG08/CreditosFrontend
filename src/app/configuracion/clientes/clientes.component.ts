@@ -10,6 +10,7 @@ import { IPersona } from '../../interfaces/persona';
 import { ICatalogoDocumento } from '../../interfaces/catalogoDocumento';
 import { ToastrService } from 'ngx-toastr';
 import { IUsuarioCliente } from '../../interfaces/usuarioCliente';
+import { CodigoPostalService } from '../../services/codigo-postal.service';
 
 declare let Swal: any;
 
@@ -22,6 +23,7 @@ declare let Swal: any;
 })
 export class ClientesComponent implements OnInit {
     modalTitle: string = '';
+    codigoPostalBusqueda = '';
     clienteForm: FormGroup;
     clientes: ICliente[] = [];
     mostrarFisica: boolean = false;
@@ -34,6 +36,7 @@ export class ClientesComponent implements OnInit {
 
     constructor(
         private clientesService: ClientesService,
+        private cpService: CodigoPostalService,
         private fb: FormBuilder,
         private elementRef: ElementRef,
         private toastr: ToastrService
@@ -57,6 +60,27 @@ export class ClientesComponent implements OnInit {
 
     ngOnInit(): void {
         this.obtenerClientes();
+    }
+
+    obtenerCodigoPostalChange(event: any): void {
+    
+        this.codigoPostalBusqueda = event.target.value;
+        console.log(this.codigoPostalBusqueda);
+    
+        
+    }
+    
+    obtenerCodigoPostal(): void {
+        this.cpService.getCodigosPostales(this.codigoPostalBusqueda).subscribe({
+            next: (response: any) => {
+                // const codigoPostal = response[0];
+                console.log(response);
+            },
+            error: (error) => {
+                console.error('Error al obtener el Código Postal:', error);
+            }, 
+            }
+        );
     }
 
     filterClientes(event: any): void {
@@ -191,6 +215,15 @@ export class ClientesComponent implements OnInit {
 
         if (idCliente === 0) {
             if (tieneDatosFisicos || tieneDatosMorales) {
+                /*Modificacion para quitar campos del formulario*/
+                clienteData.paisNacimiento = 'NA';
+                clienteData.claveElector = 'NA';
+                clienteData.curp = 'NA';
+                clienteData.nacionalidad = 'NA';
+                clienteData.estadoCivil = 'NA';
+                clienteData.regimenMatrimonial = 'NA';
+                clienteData.nombreConyuge = 'NA';
+
                 // Insertar cliente
                 this.clientesService.insertarCliente(clienteData).subscribe({
                     next: (data) => {
@@ -357,13 +390,13 @@ export class ClientesComponent implements OnInit {
             apellidoPaterno: [persona.apellidoPaterno, Validators.required],
             apellidoMaterno: [persona.apellidoMaterno, Validators.required],
             fechaNacimiento: [persona.fechaNacimiento, Validators.required],
-            paisNacimiento: [persona.paisNacimiento, Validators.required],
+            paisNacimiento: [persona.paisNacimiento],
             estadoNacimiento: [persona.estadoNacimiento, Validators.required],
             genero: [persona.genero, Validators.required],
             rfc: [persona.rfc, Validators.required],
             curp: [persona.curp, Validators.required],
             claveElector: [persona.claveElector],
-            nacionalidad: [persona.nacionalidad, Validators.required],
+            nacionalidad: [persona.nacionalidad],
             estadoCivil: [persona.estadoCivil],
             regimenMatrimonial: [persona.regimenMatrimonial],
             nombreConyuge: [persona.nombreConyuge],
