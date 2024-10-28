@@ -122,6 +122,24 @@ export class DocumentPorClienteService {
         );
     }
 
+    asignarDocumentosPorTipo(idCliente: number, tipo: 'FISICA' | 'MORAL'): Observable<void> {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return throwError(() => new Error('No token found'));
+        }
+    
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        });
+    
+        const endpoint = tipo === 'FISICA' ? 'asignar-todos-fisica' : 'asignar-todos-moral';
+    
+        return this.http.post<void>(`${this.apiUrl}/${endpoint}/${idCliente}`, {}, { headers }).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     private handleError(error: any): Observable<never> {
         // Manejo de errores
         console.error('An error occurred', error);

@@ -42,7 +42,9 @@
                             {{ o.tipo === 'Q' ? 'Queja' : (o.tipo === 'S' ? 'Sugerencia' : o.tipo) }}
                         </td>
                         <td>{{ o.fechaRegistro }}</td>
-                        <td>{{ o.estatus }}</td>
+                        <td>
+                            {{ o.estatus === 1 ? 'Pendiente' : (o.estatus === 2 ? 'En revisión' : (o.estatus === 3 ? 'Resuelta' : 'Rechazada')) }}
+                        </td>
                         <td>{{ o.descripcion }}</td>
                         <td class="d-flex align-items-center justify-content-center">
                             <ul class="botonp list-unstyled m-0">
@@ -59,6 +61,13 @@
                                         <i class="fas fa-clipboard-list" aria-hidden="true"></i>
                                     </a>
                                     <div class="tooltip">Detalles</div>
+                                </li>
+                                <li class="icon-content">
+                                    <a aria-label="Eliminar" data-social="eliminar" (click)="eliminar(o)">
+                                        <div class="filled"></div>
+                                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="tooltip">Eliminar</div>
                                 </li>
                             </ul>
                         </td>

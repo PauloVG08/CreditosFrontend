@@ -28,7 +28,7 @@
                     <tr class="text-center">
                         <th class="headerTable-top-left">Régimen Fiscal</th>
                         <th>Nombre</th>
-                        <th>Asignar Documentos</th>
+                        <!-- <th>Asignar Documentos</th> -->
                         <th class="headerTable-top-right">Subir Documentos</th>
                     </tr>
                 </thead>
@@ -48,7 +48,7 @@
                                     : 'N/A')}}
                             </ng-template>
                         </td>
-                        <td>
+                        <!-- <td>
                             <ul class="botonp list-unstyled m-0">
                                 <li class="icon-content">
                                     <a aria-label="Asignar Documentos" data-social="agregar" (click)="openAsignarDocumentosModal(o.idCliente, o.regimenFiscal!)">
@@ -58,7 +58,7 @@
                                     <div class="tooltip">Asignar</div>
                                 </li>
                             </ul>
-                        </td>
+                        </td> -->
                         <td>
                             <ul class="botonp list-unstyled m-0">
                                 <li class="icon-content">
@@ -156,7 +156,7 @@
 </div>
 
 <!-- Modal asignar documentos -->
-<div class="modal fade" id="asignarModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
+<!-- <div class="modal fade" id="asignarModal" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
@@ -164,7 +164,6 @@
                 <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Contenido del modal -->
                 <div class="card shadow-lg p-4">
                     <h5>Asignar Documentos</h5>
                     <form [formGroup]="documentosAsignarForm">
@@ -198,4 +197,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
