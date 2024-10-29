@@ -28,7 +28,14 @@
                     <label for="subMetodo">Submétodo</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" class="inputM" id="monto" placeholder="Monto del crédito" formControlName="monto" (input)="limitarCaracteres($event, 8)">
+                    <input
+                        type="text"
+                        class="inputM"
+                        id="monto"
+                        placeholder="Monto del crédito"
+                        [value]="montoFormateado" 
+                        (input)="formatCurrency($event); limitarCaracteres($event, 8)"
+                    />
                     <label for="monto">Monto del Crédito</label>
                 </div>
                 <div class="floating-label">

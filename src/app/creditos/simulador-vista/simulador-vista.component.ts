@@ -29,6 +29,7 @@ export class SimuladorVistaComponent implements OnInit {
     productos: IProducto[] = [];
     productoElegido: IProducto = {} as IProducto;
     conceptos: IConcepto[] = [];
+    montoFormateado: string = ''; // Para mostrar el monto con comas
 
     constructor(
         private fb: FormBuilder,
@@ -53,6 +54,16 @@ export class SimuladorVistaComponent implements OnInit {
         });
     }
 
+    formatCurrency(event: any) {
+        let value = event.target.value.replace(/,/g, '');
+        if (!isNaN(value)) {
+            this.simuladorForm.get('monto')?.setValue(parseFloat(value), { emitEvent: false }); 
+            this.montoFormateado = parseFloat(value).toLocaleString('en-US');
+        } else {
+            this.montoFormateado = '';
+        }
+    }
+
     ngOnInit(): void {
         this.obtenerProductos();
     }
@@ -69,16 +80,18 @@ export class SimuladorVistaComponent implements OnInit {
 
     llenarForm(producto: IProducto) {
         this.simuladorForm.patchValue({
-            //productoNombre: producto?.nombreProducto
             metodoCalculo: producto?.metodoCalculo,
             subMetodoCalculo: producto?.subMetodo,
-            monto: producto?.monto,
+            monto: producto?.monto, // Establece el valor sin formato en el formulario
             numPagos: producto?.numPagos,
             periodicidad: producto?.periodicidad,
             interesAnual: producto?.interesAnual,
             interesMoratorio: producto?.interesMoratorio,
             iva: producto?.iva
         });
+
+        // Formatea el monto para mostrarlo con comas en el campo de entrada
+        this.montoFormateado = producto?.monto ? producto.monto.toLocaleString('en-US') : '';
     }
 
     validarIntereses(producto: IProducto) {

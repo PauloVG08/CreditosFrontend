@@ -35,10 +35,10 @@
             </div>
         </fieldset>
         <div class="inputs-container mt-4">
-            <div class="floating-label">
-                <input type="number" class="inputM" id="monto" placeholder="Monto del crédito" value="{{ simulacion.monto }}" disabled>
+            <<div class="floating-label">
+                <input type="text" class="inputM" id="monto" placeholder="Monto del crédito" [value]="montoFormateado" disabled>
                 <label for="monto">Monto del Crédito</label>
-            </div>
+            </div>            
             <div class="floating-label">
                 <input type="number" class="inputM" id="iva" placeholder="IVA" value="{{ simulacion.iva }}" disabled>
                 <label for="iva">IVA</label>

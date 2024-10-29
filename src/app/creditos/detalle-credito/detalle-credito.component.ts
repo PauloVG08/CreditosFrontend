@@ -27,6 +27,7 @@ export class DetalleCreditoComponent implements OnInit{
     clientes: ICliente[] = [];
     clienteSeleccionado: ICliente | undefined;
     credito: ICredito | undefined;
+    montoFormateado: string = '';
 
     constructor(
         private router: Router,
@@ -40,6 +41,8 @@ export class DetalleCreditoComponent implements OnInit{
             this.producto = data.producto;
             this.conceptos = data.conceptos;
             this.simulacion = data.simulacion;
+
+            this.montoFormateado = this.simulacion.monto ? this.simulacion.monto.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '';
         }
     }
 
