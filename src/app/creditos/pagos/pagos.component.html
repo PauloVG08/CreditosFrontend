@@ -266,9 +266,17 @@
                                 <label for="id">Id Credito</label>
                             </div> -->
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="montoPago" (input)="limitarCaracteres($event, 8)">
+                                <input
+                                    type="text"
+                                    class="inputM"
+                                    id="montoPago"
+                                    placeholder="Monto"
+                                    formControlName="montoPago"
+                                    [value]="montoFormateado" 
+                                    (input)="formatMonto($event); limitarCaracteres($event, 8)"
+                                />
                                 <label for="monto">Monto</label>
-                            </div>
+                            </div>                            
                         </div>
                         <div class="modal-footer d-flex justify-content-center mt-4">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>

@@ -39,19 +39,19 @@ export class ProductoComponent implements OnInit {
             reca: [0, Validators.required],
             metodoCalculo: ['', Validators.required],
             subMetodo: ['', Validators.required],
-            monto: [0, Validators.required],
+            monto: [0, [Validators.required, Validators.min(0)]],
             periodicidad: ['', Validators.required],
-            numPagos: [0, Validators.required],
-            interesAnual: [0, Validators.required],
-            iva: [0, Validators.required],
-            interesMoratorio: [0, Validators.required],
+            numPagos: [0, [Validators.required, Validators.min(0)]],
+            interesAnual: [0, [Validators.required, Validators.min(0)]],
+            iva: [0, [Validators.required, Validators.min(0)]], 
+            interesMoratorio: [0, [Validators.required, Validators.min(0)]],
             pagoAnticipado: ['', Validators.required],
             aplicacionDePagos: ['', Validators.required],
             idEmpresa: [1],
             estatus: [1],
             detalleProductos: [[]]
         });
-
+    
         this.conceptoForm = this.fb.group({
             idConcepto: [0],
             nombreConcepto: ['', Validators.required],
@@ -134,7 +134,7 @@ export class ProductoComponent implements OnInit {
 
     guardar() {
         if (this.productoForm.invalid) {
-            this.toastr.error('Llena todos los campos.', 'Error');
+            this.toastr.error('Asegurate de completar los campos correctamente.', 'Error');
             return;
         }
 
@@ -328,7 +328,6 @@ export class ProductoComponent implements OnInit {
                 detalle => detalle.idConcepto !== idConcepto
             ) || [];
 
-            // Actualizar el producto en la base de datos o en el estado
             this.productosService.actualizarProducto(this.productoSeleccionado).subscribe({
                 next: () => {
                     this.toastr.success('Concepto eliminado con éxito', 'Eliminado');
@@ -378,6 +377,23 @@ export class ProductoComponent implements OnInit {
         const input = event.target;
         if (input.value.length > maxLength) {
             input.value = input.value.slice(0, maxLength);
+        }
+    }
+
+    formatMonto(event: any) {
+        let value = event.target.value.replace(/,/g, '').replace(/\./g, '');
+
+        if (!isNaN(value) && value !== '') {
+            const decimalValue = parseFloat(value) / 100;
+
+            this.productoForm.get('monto')?.setValue(decimalValue, { emitEvent: false });
+
+            event.target.value = decimalValue.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        } else {
+            event.target.value = '';
         }
     }
 }

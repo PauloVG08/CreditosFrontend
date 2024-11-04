@@ -40,56 +40,98 @@ export class PagosComponent implements OnInit {
     cliente: ICliente = {} as ICliente;
     nombreCliente: string = '';
     montoDeuda: number = 0;
+    montoFormateado: string = '';
     
-    generatePdf() {
+    async generatePdf() {
         const doc = new jsPDF();
-        let pago = this.pagos.filter(p => p.idPago == this.idPagoAAplicar)[0];
-        let credito = this.creditos.filter(p => p.idCredito == pago.idCredito)[0];
-        this.obtenerCliente(credito.idCliente);
-        let persona = null;
-        let nombreCliente=  "";
-
-        if(this.cliente.datosClienteFisicas){
-            persona = this.cliente.datosClienteFisicas[0].idPersonaNavigation
-            nombreCliente = [
-                persona?.nombre || '',
-                persona?.apellidoPaterno || '',
-                persona?.apellidoMaterno || ''
-              ].filter(part => part.trim() !== '').join(' ');
-        }else if(this.cliente.datosClienteMorals){
-            persona = this.cliente.datosClienteMorals[0].idPersonaMoralNavigation
-            nombreCliente =persona?.razonSocial || '';
+        const pago = this.pagos.find(p => p.idPago === this.idPagoAAplicar);
+        const credito = this.creditos.find(c => c.idCredito === pago?.idCredito);
+    
+        if (!pago || !credito) {
+            this.toastr.error('Error al generar el ticket: Pago o Crédito no encontrado.', 'Error');
+            return;
         }
-        
+    
+        // Espera la información del cliente antes de proceder
+        await this.obtenerCliente(credito.idCliente);
+    
+        let persona = null;
+        let nombreCliente = '';
+        if (this.cliente.datosClienteFisicas) {
+            persona = this.cliente.datosClienteFisicas[0].idPersonaNavigation;
+            nombreCliente = [persona?.nombre || '', persona?.apellidoPaterno || '', persona?.apellidoMaterno || '']
+                .filter(part => part.trim() !== '').join(' ');
+        } else if (this.cliente.datosClienteMorals) {
+            persona = this.cliente.datosClienteMorals[0].idPersonaMoralNavigation;
+            nombreCliente = persona?.razonSocial || '';
+        }
+    
         const companyName = 'Financlick';
-        const customerName = nombreCliente;
+        const title = 'Recibo de Pago';
         const paymentDate = pago.fechaAplicacion;
-        const paymentAmount = "$"+parseFloat(pago.montoPago+'');
-        const paymentFolio = pago.idPago;
+        const paymentAmount = "$" + parseFloat(pago.montoPago + '').toFixed(2);
+        const paymentFolio = pago.idPago.toString();
 
+        doc.setFontSize(20);
+        doc.setTextColor(25, 25, 112);
+        doc.setFont("helvetica", "bold");
+        doc.text(companyName, 105, 20, { align: 'center' });
 
-        doc.setFontSize(16);
-        doc.text(companyName, 20, 20); 
         doc.setFontSize(12);
-        doc.text('Ticket de Pago', 20, 30);
+        doc.setTextColor(60, 60, 60);
+        doc.text(title, 105, 30, { align: 'center' });
 
+        doc.setDrawColor(150);
         doc.line(20, 35, 190, 35);
 
         doc.setFontSize(10);
-        doc.text(`Nombre del Cliente: ${customerName}`, 20, 45);
-        doc.text(`Fecha de Pago: ${paymentDate}`, 20, 55);
-        doc.text(`Monto Pagado: ${paymentAmount}`, 20, 65);
-        doc.text(`Folio del Pago: ${paymentFolio}`, 20, 75);
+        let y = 45;
 
-        doc.line(20, 80, 190, 80);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("Nombre del Cliente:", 25, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
+        doc.text(nombreCliente, 80, y);
+        y += 10;
 
-        doc.setFontSize(10);
-        doc.text('Gracias por su pago.', 20, 90);
-        doc.text('¡Vuelva pronto!', 20, 100);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("Fecha de Pago:", 25, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
+        doc.text(paymentDate, 80, y);
+        y += 10;
 
-        doc.save('ticket_pago.pdf');
-    }
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("Monto Pagado:", 25, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(34, 139, 34);
+        doc.text(paymentAmount, 80, y);
+        y += 10;
 
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("Folio del Pago:", 25, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
+        doc.text(paymentFolio, 80, y);
+        y += 20;
+    
+        doc.setDrawColor(150);
+        doc.line(20, y, 190, y); 
+        y += 10;
+
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "italic");
+        doc.setTextColor(0, 100, 0);
+        doc.text("Gracias por su preferencia.", 105, y, { align: 'center' });
+        y += 10;
+        doc.text("¡Esperamos verle pronto!", 105, y, { align: 'center' });
+
+        doc.save('recibo_pago.pdf');
+    }    
 
     constructor(
         private elementRef: ElementRef,
@@ -423,6 +465,18 @@ export class PagosComponent implements OnInit {
         const input = event.target;
         if (input.value.length > maxLength) {
             input.value = input.value.slice(0, maxLength);
+        }
+    }
+
+    formatMonto(event: any) {
+        let value = event.target.value.replace(/,/g, ''); // Elimina las comas
+        if (!isNaN(value)) {
+            // Redondea a dos decimales y actualiza el valor formateado
+            const roundedValue = parseFloat(value).toFixed(2);
+            this.pagoForm.get('montoPago')?.setValue(parseFloat(roundedValue), { emitEvent: false });
+            this.montoFormateado = parseFloat(roundedValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        } else {
+            this.montoFormateado = '';
         }
     }
 }

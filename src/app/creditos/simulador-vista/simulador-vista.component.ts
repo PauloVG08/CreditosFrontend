@@ -43,22 +43,31 @@ export class SimuladorVistaComponent implements OnInit {
             productoNombre: ['', Validators.required],
             metodoCalculo: ['AMORTIZADO', Validators.required],
             subMetodoCalculo: ['', Validators.required],
-            monto: ['', Validators.required],
-            numPagos: [null, Validators.required],
+            monto: ['', [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+(\\.[0-9]+)?$')]], // monto no puede ser 0 o negativo
+            numPagos: [null, [Validators.required, Validators.min(1), Validators.pattern('^[0-9]+$')]], // número de pagos positivo
             periodicidad: ['', Validators.required],
             fechaInicio: ['', Validators.required],
-            interesAnual: [null, Validators.required],
-            iva: ['', Validators.required],
+            interesAnual: [null, [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]+)?$')]], // interés anual positivo
+            iva: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]+)?$')]], // IVA positivo
             ivaExento: [false],
-            interesMoratorio: ['', Validators.required],
+            interesMoratorio: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]+)?$')]], // interés moratorio positivo
         });
     }
 
     formatCurrency(event: any) {
-        let value = event.target.value.replace(/,/g, '');
-        if (!isNaN(value)) {
-            this.simuladorForm.get('monto')?.setValue(parseFloat(value), { emitEvent: false }); 
-            this.montoFormateado = parseFloat(value).toLocaleString('en-US');
+        let value = event.target.value.replace(/,/g, '').replace(/\./g, '');
+        
+        if (!isNaN(value) && value !== '') {
+            const decimalValue = parseFloat(value) / 100;
+            
+            this.simuladorForm.get('monto')?.setValue(decimalValue, { emitEvent: false });
+            
+            this.montoFormateado = decimalValue.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            event.target.value = this.montoFormateado;
         } else {
             this.montoFormateado = '';
         }
@@ -143,15 +152,6 @@ export class SimuladorVistaComponent implements OnInit {
         });
     }
 
-    calcularMontoConceptos(tipoValor: string, cantidad: number) {
-        if (tipoValor.toLocaleLowerCase() === 'porcentaje') {
-            let resultado = (this.productoElegido?.reca * cantidad) / 100;
-            return "$" + resultado;
-        } else {
-            return "$" + cantidad;
-        }
-    }
-
     simular() {
         this.validarIntereses(this.productoElegido);
         this.obtenerConceptos();
@@ -186,13 +186,6 @@ export class SimuladorVistaComponent implements OnInit {
         });
     }
 
-    calcularDias(fechaInicio: Date, fechaFin: Date): number {
-        const inicio = new Date(fechaInicio);
-        const fin = new Date(fechaFin);
-        const diferencia = Math.abs(fin.getTime() - inicio.getTime());
-        return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
-    }
-
     limpiar() {
         this.simuladorForm.reset({
             metodo: '',
@@ -211,6 +204,29 @@ export class SimuladorVistaComponent implements OnInit {
         this.toastr.info('Los campos se han limpiado.', 'Formulario Limpio');
     }
 
+    limitarCaracteres(event: any, maxLength: number): void {
+        const input = event.target;
+        if (input.value.length > maxLength) {
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
+
+    calcularMontoConceptos(tipoValor: string, cantidad: number): string {
+        if (tipoValor.toLowerCase() === 'porcentaje') {
+            let resultado = (this.productoElegido?.reca * cantidad) / 100;
+            return "$" + resultado.toFixed(2);
+        } else {
+            return "$" + cantidad.toFixed(2);
+        }
+    }
+
+    calcularDias(fechaInicio: Date, fechaFin: Date): number {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const diferencia = Math.abs(fin.getTime() - inicio.getTime());
+        return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+    }
+
     abrirCredito() {
         const data = {
             producto: this.productoElegido,
@@ -221,12 +237,5 @@ export class SimuladorVistaComponent implements OnInit {
         this.router.navigate(['creditos/detalleCredito'], {
             state: { data }
         });
-    }
-
-    limitarCaracteres(event: any, maxLength: number): void {
-        const input = event.target;
-        if (input.value.length > maxLength) {
-            input.value = input.value.slice(0, maxLength);
-        }
     }
 }

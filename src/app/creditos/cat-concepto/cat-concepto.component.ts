@@ -32,9 +32,9 @@ export class CatConceptoComponent implements OnInit {
         this.conceptoForm = this.fb.group({
             idConcepto: [0],
             nombreConcepto: ['', Validators.required],
-            valor: ['', Validators.required],
+            valor: ['', [Validators.required, Validators.min(0)]],
             tipoValor: ['', Validators.required],
-            iva: [0, Validators.required],
+            iva: [0, [Validators.required, Validators.min(0)]],
             estatus: [1],
             idEmpresa: [1]
         });
@@ -93,7 +93,7 @@ export class CatConceptoComponent implements OnInit {
 
     guardar() {
         if (this.conceptoForm.invalid) {
-            this.toastr.warning('Debe llenar todos los campos', 'Advertencia');
+            this.toastr.warning('Asegurese de llenar los campos correctamente', 'Advertencia');
             return;
         }
 

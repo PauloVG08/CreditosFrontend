@@ -123,9 +123,16 @@
                         </div>
                         <div class="inputs-container mt-4">
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="monto" placeholder="Monto" formControlName="monto" (input)="limitarCaracteres($event, 8)">
+                                <input
+                                    type="text"
+                                    class="inputM"
+                                    id="monto"
+                                    placeholder="Monto"
+                                    formControlName="monto"
+                                    (input)="formatMonto($event); limitarCaracteres($event, 10)"
+                                />
                                 <label for="monto">Monto</label>
-                            </div>
+                            </div>                            
                             <div class="floating-label">
                                 <select class="inputM" id="periodicidad" formControlName="periodicidad">
                                     <option value="" disabled selected>Selecciona periodicidad</option>
