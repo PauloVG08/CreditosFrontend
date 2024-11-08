@@ -9,7 +9,7 @@ import { IPagoAplicado } from '../interfaces/pagoAplicado';
   providedIn: 'root',
 })
 export class PagosService {
-  private apiUrl = 'https://localhost:5000/api/Pagos';
+  private apiUrl = 'https://localhost:5000/api';
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 
@@ -24,7 +24,7 @@ export class PagosService {
     };
 
     return this.http
-      .get<IPago[]>(`${this.apiUrl}/PagosCredito/${id}`, { headers })
+      .get<IPago[]>(`${this.apiUrl}/Pagos/PagosCredito/${id}`, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -39,7 +39,7 @@ export class PagosService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<string>(`${this.apiUrl}/registrarPago`, pago, { headers, responseType: 'text' as 'json' }).pipe(
+    return this.http.post<string>(`${this.apiUrl}/Pagos/registrarPago`, pago, { headers, responseType: 'text' as 'json' }).pipe(
       catchError(error => {
         console.error('Error registering payment:', error);
         this.toastr.error('Error al registrar el pago.');
@@ -59,7 +59,7 @@ export class PagosService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.post<string>(`${this.apiUrl}/aplicarPago/${id}`, {}, { headers, responseType: 'text' as 'json' })
+    return this.http.post<string>(`${this.apiUrl}/Pagos/aplicarPago/${id}`, {}, { headers, responseType: 'text' as 'json' })
       .pipe(
         catchError(error => {
           console.error('Error applying payment:', error);
@@ -68,8 +68,24 @@ export class PagosService {
       );
   }
 
-  
+  getAmortizacionesProximasAVencer(): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('No token found'));
+    }
 
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<any>(`${this.apiUrl}/Pagos/ProximasAVencer`, { headers })
+      .pipe(
+        catchError(error => {
+          this.toastr.error('Error al obtener las amortizaciones próximas a vencer.');
+          return throwError(() => new Error('Error fetching upcoming amortizations'));
+        })
+      );
+  }
 
   private handleError(error: any): Observable<never> {
     const errorMessage = `Error: ${error.status} - ${error.message}`;

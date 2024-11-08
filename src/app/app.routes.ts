@@ -16,6 +16,7 @@ import { PagosComponent } from './creditos/pagos/pagos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RolesComponent } from './configuracion/roles/roles.component';
 import { QuejasSugerenciasComponent } from './quejas-sugerencias/quejas-sugerencias.component';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -34,6 +35,7 @@ export const routes: Routes = [
     { path: 'configuracion/clientes', component: ClientesComponent, canActivate: [AuthGuard] },
     { path: 'configuracion/roles', component: RolesComponent, canActivate: [AuthGuard] },
     { path: 'quejas_sugerencias', component: QuejasSugerenciasComponent, canActivate: [AuthGuard] },
+    { path: 'notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'login' }
 ];
