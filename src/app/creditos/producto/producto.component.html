@@ -103,7 +103,7 @@
                                 <label for="nombreProducto">Nombre Producto</label>
                             </div>
                             <div class="floating-label">
-                                <input type="number" class="inputM" id="reca" placeholder="Reca" formControlName="reca" (input)="limitarCaracteres($event, 5)">
+                                <input type="number" class="inputM" id="reca" placeholder="Reca" formControlName="reca" (input)="limitarCaracteres($event, 16)">
                                 <label for="reca">Reca</label>
                             </div>
                             <div class="floating-label">
@@ -152,10 +152,10 @@
                             </div>
                         </div>
                         <div class="inputs-container mt-4">
-                            <div class="floating-label">
+                            <!-- <div class="floating-label">
                                 <input type="number" class="inputM" id="iva" placeholder="IVA" formControlName="iva" (input)="limitarCaracteres($event, 2)">
                                 <label for="iva">IVA</label>
-                            </div>
+                            </div> -->
                             <div class="floating-label">
                                 <input type="number" class="inputM" id="interesMoratorio" placeholder="Inter&eacute;s moratorio" formControlName="interesMoratorio" (input)="limitarCaracteres($event, 2)">
                                 <label for="interesMoratorio">Inter&eacute;s moratorio</label>

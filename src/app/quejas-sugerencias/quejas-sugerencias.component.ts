@@ -41,7 +41,7 @@ export class QuejasSugerenciasComponent implements OnInit {
             fechaRegistro: ['', Validators.required],
             estatus: [1, Validators.required],
             fechaResolucion: [''],
-            responsable: [0],
+            responsable: [null],
             prioridad: [0],
             comentarios: ['']
         });        
@@ -67,24 +67,74 @@ export class QuejasSugerenciasComponent implements OnInit {
             this.toastr.error('No se encontró el ID de la queja.');
             return;
         }
-
+    
         this.modalTitle = 'Detalles de la queja o sugerencia';
+    
+        const fechaRegistro = queja.fechaRegistro 
+            ? new Date(queja.fechaRegistro).toISOString().split('T')[0] 
+            : null;
+    
+        // Función para obtener el texto de la prioridad
+        const getPrioridadTexto = (prioridad: number): string => {
+            switch (prioridad) {
+                case 1:
+                    return 'Alta';
+                case 2:
+                    return 'Media';
+                case 3:
+                    return 'Baja';
+                default:
+                    return 'Sin prioridad';
+            }
+        };
 
+        const getEstatusTexto = (estatus: number): string => {
+            switch (estatus) {
+                case 1:
+                    return 'Pendiente';
+                case 2:
+                    return 'En revisión';
+                case 3:
+                    return 'Resuelto';
+                case 4:
+                    return 'Rechazada';
+                default:
+                    return 'Desconocido';
+            }
+        };
+
+        const getTipoTexto = (tipo: string): string => {
+            switch (tipo) {
+                case 'Q':
+                    return 'Queja';
+                case 'S':
+                    return 'Sugerencia';
+                default:
+                    return 'Desconocido';
+            }
+        };
+
+        const prioridadTexto = queja.prioridad !== undefined ? getPrioridadTexto(queja.prioridad) : 'Sin prioridad';
+        const estatusTexto = queja.estatus !== undefined ? getEstatusTexto(queja.estatus) : 'Desconocido';
+        const tipoTexto = queja.tipo !== undefined ? getTipoTexto(queja.tipo) : 'Desconocido';
+    
         this.quejaForm.patchValue({
             idQuejaSugerencia: queja.idQuejaSugerencia,
             idEmpresa: queja.idEmpresa,
-            tipo: queja.tipo,
+            tipo: tipoTexto,
             descripcion: queja.descripcion,
-            fechaRegistro: queja.fechaRegistro,
-            estatus: queja.estatus,
+            fechaRegistro: fechaRegistro,
+            estatus: estatusTexto,
             fechaResolucion: queja.fechaResolucion,
-            responsable: 0,
-            prioridad: queja.prioridad,
+            responsable: null,
+            prioridad: prioridadTexto,
             comentarios: queja.comentarios
         });
+    
+        console.log(this.quejaForm.value);
 
         this.quejaForm.disable();
-
+    
         const modalElement = this.elementRef.nativeElement.querySelector('#staticBackdrop');
         if (modalElement) {
             const modalInstance = new (window as any).bootstrap.Modal(modalElement, {
@@ -107,6 +157,7 @@ export class QuejasSugerenciasComponent implements OnInit {
     }
 
     onModalClose() {
+        this.quejaForm.enable();
         this.quejaForm.reset();
     }
 
@@ -124,7 +175,7 @@ export class QuejasSugerenciasComponent implements OnInit {
                 fechaRegistro: queja.fechaRegistro,
                 estatus: queja.estatus,
                 fechaResolucion: queja.fechaResolucion,
-                responsable: 0,
+                responsable: null,
                 prioridad: queja.prioridad,
                 comentarios: queja.comentarios
             });

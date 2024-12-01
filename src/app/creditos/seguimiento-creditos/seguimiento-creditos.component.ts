@@ -72,13 +72,13 @@ export class SeguimientoCreditosComponent implements OnInit {
             apellidoPaterno: ['', Validators.required],
             apellidoMaterno: ['', Validators.required],
             fechaNacimiento: ['', Validators.required],
-            paisNacimiento: ['', Validators.required],
+            paisNacimiento: ['MEXICO', Validators.required],
             estadoNacimiento: ['', Validators.required],
             genero: ['', Validators.required],
             rfc: ['', Validators.required],
             curp: ['', Validators.required],
             claveElector: [''],
-            nacionalidad: ['', Validators.required],
+            nacionalidad: ['MEXICANA', Validators.required],
             estadoCivil: [''],
             regimenMatrimonial: [''],
             nombreConyuge: [''],
@@ -87,9 +87,9 @@ export class SeguimientoCreditosComponent implements OnInit {
             numInterior: [''],
             colonia: ['', Validators.required],
             codigoPostal: ['', Validators.required],
-            paisResidencia: ['', Validators.required],
-            estadoResidencia: ['', Validators.required],
-            ciudadResidencia: ['', Validators.required],
+            paisResidencia: ['MEXICO', Validators.required],
+            estadoResidencia: ['GUANAJUATO', Validators.required],
+            ciudadResidencia: ['LEON', Validators.required],
             email: ['', Validators.required],
             telefono: ['']
         });
@@ -100,11 +100,11 @@ export class SeguimientoCreditosComponent implements OnInit {
             razonComercial: [''],
             fechaConstitucion: ['', Validators.required],
             rfc: ['', Validators.required],
-            nacionalidad: ['', Validators.required],
-            paisRegistro: ['', Validators.required],
-            estadoRegistro: ['', Validators.required],
-            ciudadRegistro: ['', Validators.required],
-            numEscritura: ['', Validators.required],
+            nacionalidad: ['MEXICANA', Validators.required],
+            paisRegistro: ['MEXICO', Validators.required],
+            estadoRegistro: ['GUANAJUATO', Validators.required],
+            ciudadRegistro: ['LEON', Validators.required],
+            numEscritura: ['123456789', Validators.required],
             fechaRppc: [null],
             nombreNotario: [''],
             numNotario: [''],
@@ -114,9 +114,9 @@ export class SeguimientoCreditosComponent implements OnInit {
             numInterior: [''],
             colonia: ['', Validators.required],
             codigoPostal: ['', Validators.required],
-            paisResidencia: ['', Validators.required],
-            estadoResidencia: ['', Validators.required],
-            ciudadResidencia: ['', Validators.required],
+            paisResidencia: ['MEXICO', Validators.required],
+            estadoResidencia: ['GUANAJUATO', Validators.required],
+            ciudadResidencia: ['LEON', Validators.required],
         });
     }
 
@@ -236,6 +236,7 @@ export class SeguimientoCreditosComponent implements OnInit {
         }
 
         if (this.regimenFiscal === 'FISICA') {
+            console.log(this.personaForm.value);
             if (!this.personaForm.valid) {
                 this.toastr.warning('Por favor, completa todos los campos obligatorios.');
                 return;
@@ -249,6 +250,7 @@ export class SeguimientoCreditosComponent implements OnInit {
             });
 
         } else if (this.regimenFiscal === 'MORAL') {
+            console.log(this.personaMoralForm.value);
             if (!this.personaMoralForm.valid) {
                 this.toastr.warning('Por favor, completa todos los campos obligatorios.');
                 return;

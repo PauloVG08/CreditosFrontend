@@ -177,10 +177,10 @@ export class EmpresaComponent implements OnInit {
             return;
         }
 
-        if (this.empresaForm.invalid || !this.selectedImage) {
+        /*if (this.empresaForm.invalid || !this.selectedImage) {
             this.toastr.warning('Debe llenar todos los campos y seleccionar una imagen.');
             return;
-        }
+        }*/
 
         const formatDate = (date: Date): string => {
             const year = date.getFullYear();
