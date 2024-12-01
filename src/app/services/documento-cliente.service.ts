@@ -8,7 +8,7 @@ import { ICDocumentoCliente } from '../interfaces/documentoCliente';
     providedIn: 'root'
 })
 export class DocumentPorClienteService {
-    private apiUrl = 'https://localhost:5000/api/DocumentoCliente';
+    private apiUrl = 'https://financlick.somee.com/api/DocumentoCliente';
 
     constructor(private http: HttpClient) {}
 

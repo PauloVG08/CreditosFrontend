@@ -8,7 +8,7 @@ import { IRol } from '../interfaces/rol';
   providedIn: 'root'
 })
 export class RolesService {
-  private apiUrl = 'https://localhost:5000/api/Rol';
+  private apiUrl = 'https://financlick.somee.com/api/Rol';
 
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}

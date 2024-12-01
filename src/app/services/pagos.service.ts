@@ -9,7 +9,7 @@ import { IPagoAplicado } from '../interfaces/pagoAplicado';
   providedIn: 'root',
 })
 export class PagosService {
-  private apiUrl = 'https://localhost:5000/api';
+  private apiUrl = 'https://financlick.somee.com/api';
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 

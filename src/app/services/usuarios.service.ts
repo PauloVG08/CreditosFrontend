@@ -9,7 +9,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 })
 export class UsuariosService {
 
-  private apiUrl = 'https://localhost:5000/api/Usuario';
+  private apiUrl = 'https://financlick.somee.com/api/Usuario';
 
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}

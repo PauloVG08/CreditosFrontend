@@ -9,9 +9,9 @@ import { IUsuarioCliente } from '../interfaces/usuarioCliente';
     providedIn: 'root'
 })
 export class ClientesService {
-    private apiUrl = 'https://localhost:5000/api/Cliente';
-    private apiUrlUC = 'https://localhost:5000/api/UsuarioCliente';
-    private apiUrlDoc = 'https://localhost:5000/api/DocumentoCliente';
+    private apiUrl = 'https://financlick.somee.com/api/Cliente';
+    private apiUrlUC = 'https://financlick.somee.com/api/UsuarioCliente';
+    private apiUrlDoc = 'https://financlick.somee.com/api/DocumentoCliente';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

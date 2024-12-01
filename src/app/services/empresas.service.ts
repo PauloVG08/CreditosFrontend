@@ -9,7 +9,7 @@ import { IEmpresa } from '../interfaces/empresa';
     providedIn: 'root'
 })
 export class EmpresasService {
-    private apiUrl = 'https://localhost:5000/api/Empresa';
+    private apiUrl = 'https://financlick.somee.com/api/Empresa';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 

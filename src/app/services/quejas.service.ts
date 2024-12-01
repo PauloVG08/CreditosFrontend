@@ -8,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     providedIn: 'root'
 })
 export class QuejasService {
-    private apiUrl = 'https://localhost:5000/api/QuejaSugerencium';
+    private apiUrl = 'https://financlick.somee.com/api/QuejaSugerencium';
 
     constructor(private http: HttpClient, private toastr: ToastrService) { }
 
